@@ -449,7 +449,7 @@ drawRoute(points[i],points[j]);
 points.forEach((p,i)=>{
 
 let nearest=null;
-let best=999;
+let best=Infinity;
 
 points.forEach((q,j)=>{
 if(i===j)return;
@@ -465,34 +465,6 @@ nearest=q;
 if(nearest){
 drawRoute(p,nearest);
 }
-
-});
-
-}
-
-
-/* ENSURE NO ISOLATED PLANET */
-
-points.forEach((p,i)=>{
-
-let nearest=null;
-let best=Infinity;
-
-points.forEach((q,j)=>{
-if(i===j)return;
-
-const dx=p.x-q.x;
-const dy=p.y-q.y;
-const d=Math.sqrt(dx*dx+dy*dy);
-
-if(d<best){
-best=d;
-nearest=q;
-}
-
-});
-
-if(nearest) drawRoute(p,nearest);
 
 });
 
@@ -607,6 +579,7 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
 
