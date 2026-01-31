@@ -210,9 +210,21 @@ z-index:3;
 }
 
 .route-line{
+stroke-dasharray:3 4;
 stroke:rgba(0,170,255,.55);
 stroke-width:.7;
+animation: dashMove 10s linear infinite;
 }
+
+@keyframes dashMove{
+from{
+stroke-dashoffset:0;
+}
+to{
+stroke-dashoffset:-100;
+}
+}
+
 
 /* ================= INFO ================= */
 
@@ -472,7 +484,8 @@ function buildRoutes(){
 routesSVG.innerHTML="";
 
 const planets=document.querySelectorAll(".planet");
-const rect=viewport.getBoundingClientRect();
+const rect = world.getBoundingClientRect();
+
 
 const points=[];
 
@@ -489,7 +502,10 @@ const dx=points[i].x-points[j].x;
 const dy=points[i].y-points[j].y;
 const dist=Math.sqrt(dx*dx+dy*dy);
 
-if(dist<220){
+const maxDist = rect.width * 0.35;
+
+if(dist < maxDist){
+
 
 const line=document.createElementNS("http://www.w3.org/2000/svg","line");
 
@@ -632,6 +648,7 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
 
