@@ -112,12 +112,45 @@ top:50%;
 width:18px;
 height:18px;
 pointer-events:none;
+
+transform-origin:center center;
+
+filter:
+drop-shadow(0 0 6px rgba(0,170,255,.8))
+drop-shadow(0 0 12px rgba(0,170,255,.4));
+
+animation:
+orbit 6s linear infinite,
+pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* ORBIT ANIMATION */
+
+@keyframes orbit{
+from{
 transform:
 translate(-50%,-50%)
 rotate(calc(var(--i)*25deg))
 translate(26px)
 rotate(calc(var(--i)*-25deg));
 }
+to{
+transform:
+translate(-50%,-50%)
+rotate(calc(var(--i)*25deg + 360deg))
+translate(26px)
+rotate(calc(var(--i)*-25deg - 360deg));
+}
+}
+
+/* HALO PULSE */
+
+@keyframes pulseGlow{
+0%{ filter: drop-shadow(0 0 4px rgba(0,170,255,.5)); }
+50%{ filter: drop-shadow(0 0 10px rgba(0,170,255,.9)); }
+100%{ filter: drop-shadow(0 0 4px rgba(0,170,255,.5)); }
+}
+
 
 .capital-ship{
 position:absolute;
@@ -504,6 +537,7 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
 
