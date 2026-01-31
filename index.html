@@ -75,8 +75,10 @@ height:50px;
 display:flex;
 align-items:center;
 justify-content:center;
+cursor:pointer;
 }
 
+/* DOT */
 
 .dot{
 position:absolute;
@@ -86,7 +88,6 @@ transform:translate(-50%,-50%);
 width:12px;
 height:12px;
 border-radius:50%;
-cursor:pointer;
 }
 
 /* FACTIONS */
@@ -273,7 +274,6 @@ z-index:10;
 
 let scale=1,posX=0,posY=0;
 let dragging=false,lastX=0,lastY=0;
-
 let velocityX=0,velocityY=0,inertiaActive=false;
 
 const world=document.getElementById("map-world");
@@ -424,7 +424,7 @@ img=`<img src="static/${p.dataset.image}" class="info-image">`;
 
 let patrolHTML="";
 
-if(p.dataset.patrolnames){
+if(p.dataset.patrolnames && p.dataset.patrolnames.trim()!==""){
 const names=p.dataset.patrolnames.split(";");
 patrolHTML=`
 <hr>
@@ -517,4 +517,5 @@ buildRoutes();
 
 </body>
 </html>
+
 
