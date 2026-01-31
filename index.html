@@ -1,144 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Galactic RP Map</title>
-
-<style>
-
-body {
-margin:0;
-font-family:Arial;
-color:white;
-background-image:url("static/background.jpg");
-background-size:cover;
-background-attachment:fixed;
-background-color:#050814;
-}
-
-h2 { text-align:center; }
-
-/* MAP */
-
-#map-container{
-position:relative;
-width:900px;
-max-width:95vw;
-aspect-ratio:16/9;
-margin:20px auto;
-background:#081224;
-border-radius:12px;
-border:1px solid rgba(0,150,255,.4);
-overflow:hidden;
-cursor:grab;
-}
-
-#map-world{
-position:absolute;
-width:100%;
-height:100%;
-}
-
-/* PLANETS */
-
-.planet{
-position:absolute;
-transform:translate(-50%,-50%);
-}
-
-.dot{
-width:12px;
-height:12px;
-border-radius:50%;
-cursor:pointer;
-}
-
-/* FACTIONS */
-
-.republic .dot{background:#4db8ff;box-shadow:0 0 8px #4db8ff;}
-.empire .dot{background:#ff2b2b;box-shadow:0 0 8px #ff2b2b;}
-.neutral .dot{background:#cccccc;box-shadow:0 0 6px #ccc;}
-.pirates .dot{background:#9c27ff;box-shadow:0 0 6px #9c27ff;}
-
-/* LABEL */
-
-.label{
-margin-top:6px;
-font-size:11px;
-background:rgba(0,0,0,.7);
-padding:3px 6px;
-border-radius:5px;
-white-space:nowrap;
-}
-
-/* INFO */
-
-#info{
-width:900px;
-max-width:95vw;
-margin:15px auto;
-padding:12px;
-background:#081a35;
-border-radius:10px;
-}
-
-/* ROUTES */
-
-#routes-layer{
-position:absolute;
-width:100%;
-height:100%;
-pointer-events:none;
-}
-
-.route-line{
-stroke:rgba(0,170,255,.5);
-stroke-width:.7;
-}
-
-/* BUTTON */
-
-#route-toggle{
-position:absolute;
-top:10px;
-right:10px;
-padding:6px 10px;
-background:#0a2a55;
-border-radius:8px;
-cursor:pointer;
-}
-
-</style>
-</head>
-
-<body>
-
-<h2>Galactic RP Map</h2>
-
-<div id="map-container">
-
-<div id="route-toggle">Routes : ON</div>
-
-<div id="map-world">
-
-<svg id="routes-layer"></svg>
-
-</div>
-</div>
-
-<div id="info">Click on a planet</div>
-
 <script>
 
-/* CAMERA */
+/* ================= CAMERA ================= */
 
 let scale=1,posX=0,posY=0;
+let dragging=false,lastX=0,lastY=0;
+
 const world=document.getElementById("map-world");
 const viewport=document.getElementById("map-container");
 
 function updateTransform(){
 world.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
+buildRoutes();
 }
+
+/* ZOOM */
 
 viewport.addEventListener("wheel",e=>{
 e.preventDefault();
@@ -147,7 +22,26 @@ scale=Math.max(.6,Math.min(2.5,scale));
 updateTransform();
 },{passive:false});
 
-/* ROUTES */
+/* DRAG */
+
+viewport.addEventListener("mousedown",e=>{
+dragging=true;
+lastX=e.clientX;
+lastY=e.clientY;
+});
+
+window.addEventListener("mouseup",()=>dragging=false);
+
+window.addEventListener("mousemove",e=>{
+if(!dragging)return;
+posX+=e.clientX-lastX;
+posY+=e.clientY-lastY;
+lastX=e.clientX;
+lastY=e.clientY;
+updateTransform();
+});
+
+/* ================= ROUTES ================= */
 
 const routesSVG=document.getElementById("routes-layer");
 
@@ -156,16 +50,17 @@ function buildRoutes(){
 routesSVG.innerHTML="";
 
 const planets=document.querySelectorAll(".planet");
-const rectMap=viewport.getBoundingClientRect();
+const rect=viewport.getBoundingClientRect();
 
 const points=[];
 
 planets.forEach(p=>{
-const r=p.getBoundingClientRect();
-points.push({
-x:r.left+r.width/2-rectMap.left,
-y:r.top+r.height/2-rectMap.top
-});
+
+const x=parseFloat(p.style.left)/100*rect.width;
+const y=parseFloat(p.style.top)/100*rect.height;
+
+points.push({x,y});
+
 });
 
 for(let i=0;i<points.length;i++){
@@ -178,10 +73,12 @@ const dist=Math.sqrt(dx*dx+dy*dy);
 if(dist<220){
 
 const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+
 line.setAttribute("x1",points[i].x);
 line.setAttribute("y1",points[i].y);
 line.setAttribute("x2",points[j].x);
 line.setAttribute("y2",points[j].y);
+
 line.classList.add("route-line");
 routesSVG.appendChild(line);
 }
@@ -190,22 +87,29 @@ routesSVG.appendChild(line);
 
 }
 
-/* INFO PANEL */
+/* ================= INFO PANEL ================= */
 
 function selectPlanet(el){
 
-const planet=el.closest(".planet");
+const p=el.closest(".planet");
+
+let img="";
+
+if(p.dataset.image){
+img=`<img src="static/${p.dataset.image}" class="info-image">`;
+}
 
 document.getElementById("info").innerHTML=`
-<h3>${planet.dataset.name}</h3>
-<b>Faction:</b> ${planet.dataset.faction}<br><br>
-${planet.dataset.desc}<br><br>
-<a href="${planet.dataset.wiki}" target="_blank">Open Wiki</a>
+${img}
+<h3>${p.dataset.name}</h3>
+<b>Faction:</b> ${p.dataset.faction}<br><br>
+${p.dataset.desc}<br><br>
+<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
 `;
 
 }
 
-/* ROUTE TOGGLE */
+/* ================= ROUTE TOGGLE ================= */
 
 let routesVisible=true;
 
@@ -216,7 +120,7 @@ routesSVG.style.display=routesVisible?"block":"none";
 
 };
 
-/* LOAD DATA */
+/* ================= LOAD DATA ================= */
 
 fetch("data.json")
 .then(r=>r.json())
@@ -224,32 +128,52 @@ fetch("data.json")
 
 planetes.forEach(p=>{
 
-const div=document.createElement("div");
+const planet=document.createElement("div");
+planet.className="planet "+p.Faction.toLowerCase();
 
-div.className="planet "+p.Faction.toLowerCase();
-div.style.left=p.X+"%";
-div.style.top=p.Y+"%";
+planet.style.left=p.X+"%";
+planet.style.top=p.Y+"%";
 
-div.dataset.name=p.Planete;
-div.dataset.faction=p.Faction;
-div.dataset.desc=p.Description;
-div.dataset.wiki=p.Wiki;
+planet.dataset.name=p.Planete;
+planet.dataset.faction=p.Faction;
+planet.dataset.desc=p.Description;
+planet.dataset.wiki=p.Wiki;
+planet.dataset.image=p.Image || "";
 
-div.innerHTML=`
-<div class="dot" onclick="selectPlanet(this)"></div>
-<div class="label">${p.Planete}</div>
+/* DOT */
+
+planet.innerHTML=`<div class="dot" onclick="selectPlanet(this)"></div>`;
+
+/* PATROL SHIPS */
+
+for(let i=0;i<(p.PatrolCount||0);i++){
+
+planet.innerHTML+=`
+<img src="static/patrol_ship.png"
+class="ship-icon"
+style="--i:${i}">
 `;
+}
 
-world.appendChild(div);
+/* CAPITAL SHIPS */
+
+for(let i=0;i<(p.CapitalShip||0);i++){
+
+planet.innerHTML+=`
+<img src="static/capital_ship.png"
+class="capital-ship">
+`;
+}
+
+/* LABEL */
+
+planet.innerHTML+=`<div class="label">${p.Planete}</div>`;
+
+world.appendChild(planet);
 
 });
 
 buildRoutes();
 
 });
-
 </script>
-
-</body>
-</html>
-
