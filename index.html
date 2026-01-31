@@ -177,6 +177,19 @@ z-index:10;
 }
 
 #route-toggle.off{opacity:.6;}
+/* ================= SELECTED PLANET ================= */
+
+.planet.selected{
+z-index:20;
+}
+
+.planet.selected .label{
+font-size:14px;
+font-weight:bold;
+background:rgba(0,140,255,.9);
+box-shadow:0 0 12px rgba(0,150,255,.8);
+transform:scale(1.15);
+}
 
 </style>
 </head>
@@ -294,6 +307,39 @@ function selectPlanet(el){
 
 const p=el.closest(".planet");
 
+/* REMOVE OLD SELECTION */
+
+document.querySelectorAll(".planet").forEach(pl=>{
+pl.classList.remove("selected");
+});
+
+/* ADD SELECT */
+
+p.classList.add("selected");
+
+/* ================= CENTER CAMERA ================= */
+
+const mapRect=viewport.getBoundingClientRect();
+
+const planetX=parseFloat(p.style.left)/100*mapRect.width;
+const planetY=parseFloat(p.style.top)/100*mapRect.height;
+
+/* CENTER WITH SCALE */
+
+posX=mapRect.width/2-planetX*scale;
+posY=mapRect.height/2-planetY*scale;
+
+/* SMOOTH MOVE */
+
+world.style.transition="transform .5s ease";
+updateTransform();
+
+setTimeout(()=>{
+world.style.transition="";
+},500);
+
+/* ================= INFO PANEL ================= */
+
 let img="";
 
 if(p.dataset.image){
@@ -309,6 +355,7 @@ ${p.dataset.desc}<br><br>
 `;
 
 }
+
 
 /* ================= ROUTE TOGGLE ================= */
 
@@ -383,4 +430,5 @@ buildRoutes();
 
 </body>
 </html>
+
 
