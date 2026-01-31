@@ -214,25 +214,43 @@ stroke:rgba(0,170,255,.55);
 stroke-width:.7;
 }
 
+
 /* ================= INFO PANEL ================= */
 
-#info{
-width:900px;
-max-width:95vw;
-margin:15px auto;
-padding:14px;
-background:linear-gradient(135deg,#0a2850,#06162f);
-border-radius:12px;
-border:1px solid rgba(0,150,255,.4);
+let img="";
+
+if(p.dataset.image){
+img=`<img src="static/${p.dataset.image}" class="info-image">`;
 }
 
-.info-image{
-width:100%;
-max-height:220px;
-object-fit:cover;
-border-radius:8px;
-margin-bottom:10px;
+/* PATROL NAMES */
+
+let patrolHTML = "";
+
+if(p.dataset.patrolnames && p.dataset.patrolnames.trim() !== ""){
+
+const names = p.dataset.patrolnames.split(";");
+
+patrolHTML = `
+<hr>
+<b>Patrol Units:</b><br>
+<ul>
+${names.map(n=>`<li>${n.trim()}</li>`).join("")}
+</ul>
+`;
 }
+
+/* FINAL INFO */
+
+document.getElementById("info").innerHTML=`
+${img}
+<h3>${p.dataset.name}</h3>
+<b>Faction:</b> ${p.dataset.faction}<br><br>
+${p.dataset.desc}
+${patrolHTML}
+<br>
+<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
+`;
 
 /* ================= ROUTE BUTTON ================= */
 
@@ -597,6 +615,7 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
 
