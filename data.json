@@ -101,7 +101,7 @@
     "X": "32.5",
     "Y": "93",
     "PatrolCount": "0",
-    "CapitalShip": "0",
+    "CapitalShip": "3",
     "Image": "Tanalorr.png"
   },
   {
@@ -130,7 +130,7 @@
     "PatrolNames": "",
     "X": "93",
     "Y": "71.5",
-    "PatrolCount": "0",
+    "PatrolCount": "2",
     "CapitalShip": "0",
     "Image": "Kamino.png"
   },
