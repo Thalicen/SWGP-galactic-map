@@ -10,8 +10,8 @@
     "PatrolNames": "jean",
     "X": "24.5",
     "Y": "28.5",
-    "PatrolCount": "1",
-    "CapitalShip": "0",
+    "PatrolCount": "0",
+    "CapitalShip": "3",
     "Image": "Ilum.png"
   },
   {
@@ -385,7 +385,7 @@
     "PatrolNames": "",
     "X": "58.9",
     "Y": "14.25",
-    "PatrolCount": "2",
+    "PatrolCount": "0",
     "CapitalShip": "0",
     "Image": "Dantooine.png"
   },
