@@ -210,18 +210,23 @@ z-index:3;
 }
 
 .route-line{
-stroke-dasharray:3 4;
 stroke:rgba(0,170,255,.55);
-stroke-width:.7;
-animation: dashMove 10s linear infinite;
+stroke-width:.8;
+filter: drop-shadow(0 0 3px rgba(0,170,255,.5));
+animation: routeGlow 3s ease-in-out infinite;
 }
-
-@keyframes dashMove{
-from{
-stroke-dashoffset:0;
+@keyframes routeGlow{
+0%{
+opacity:0.6;
+filter: drop-shadow(0 0 2px rgba(0,170,255,.4));
 }
-to{
-stroke-dashoffset:-100;
+50%{
+opacity:1;
+filter: drop-shadow(0 0 6px rgba(0,170,255,.9));
+}
+100%{
+opacity:0.6;
+filter: drop-shadow(0 0 2px rgba(0,170,255,.4));
 }
 }
 
@@ -648,6 +653,7 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
 
