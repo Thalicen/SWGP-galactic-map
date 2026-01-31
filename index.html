@@ -92,7 +92,7 @@ cursor:pointer;
 /* LABEL */
 
 .label{
-margin-top:22px; /* distance texte ↔ planète */
+margin-top:22px;
 font-size:11px;
 background:rgba(0,0,0,.7);
 padding:3px 6px;
@@ -100,7 +100,6 @@ border-radius:5px;
 white-space:nowrap;
 pointer-events:none;
 transform: translateY(10px);
-
 }
 
 /* ================= SHIPS ================= */
@@ -110,10 +109,8 @@ position:absolute;
 left:50%;
 top:50%;
 width:18px;
-height:18px;
 pointer-events:none;
-
-transform-origin:center center;
+transform-origin:center;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.8))
@@ -123,8 +120,6 @@ animation:
 orbit 6s linear infinite,
 pulseGlow 2.5s ease-in-out infinite;
 }
-
-/* ORBIT ANIMATION */
 
 @keyframes orbit{
 from{
@@ -143,24 +138,21 @@ rotate(calc(var(--i)*-25deg - 360deg));
 }
 }
 
-/* HALO PULSE */
-
 @keyframes pulseGlow{
 0%{ filter: drop-shadow(0 0 4px rgba(0,170,255,.5)); }
 50%{ filter: drop-shadow(0 0 10px rgba(0,170,255,.9)); }
 100%{ filter: drop-shadow(0 0 4px rgba(0,170,255,.5)); }
 }
 
+/* CAPITAL SHIPS */
 
 .capital-ship{
 position:absolute;
 left:50%;
 top:50%;
 width:36px;
-height:36px;
 pointer-events:none;
-
-transform-origin: center center;
+transform-origin:center;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.6))
@@ -170,8 +162,6 @@ animation:
 capitalOrbit 14s linear infinite,
 capitalGlow 3s ease-in-out infinite;
 }
-
-/* ORBIT SLOW */
 
 @keyframes capitalOrbit{
 from{
@@ -190,14 +180,11 @@ rotate(-360deg);
 }
 }
 
-/* GLOW PULSE */
-
 @keyframes capitalGlow{
 0%{filter:drop-shadow(0 0 6px rgba(0,170,255,.4));}
 50%{filter:drop-shadow(0 0 14px rgba(0,170,255,.9));}
 100%{filter:drop-shadow(0 0 6px rgba(0,170,255,.4));}
 }
-
 
 /* ================= ROUTES ================= */
 
@@ -214,19 +201,25 @@ stroke:rgba(0,170,255,.55);
 stroke-width:.7;
 }
 
+/* ================= INFO ================= */
 
+#info{
+width:900px;
+max-width:95vw;
+margin:15px auto;
+padding:14px;
+background:linear-gradient(135deg,#0a2850,#06162f);
+border-radius:12px;
+border:1px solid rgba(0,150,255,.4);
+}
 
-/* FINAL INFO */
-
-document.getElementById("info").innerHTML=`
-${img}
-<h3>${p.dataset.name}</h3>
-<b>Faction:</b> ${p.dataset.faction}<br><br>
-${p.dataset.desc}
-${patrolHTML}
-<br>
-<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
-`;
+.info-image{
+width:100%;
+max-height:220px;
+object-fit:cover;
+border-radius:8px;
+margin-bottom:10px;
+}
 
 /* ================= ROUTE BUTTON ================= */
 
@@ -242,48 +235,10 @@ border:1px solid rgba(0,150,255,.6);
 z-index:10;
 }
 
-#route-toggle.off{opacity:.6;}
-/* ================= SELECTED PLANET ================= */
+/* ================= SELECT ================= */
 
-.planet.selected{
-z-index:20;
-}
-
-
-.planet.selected .label{
-z-index:25;
-}
-
-
-/* ================= SELECTED LABEL FRONT ONLY ================= */
-
-.planet.selected .label{
-background: rgba(0,0,0,.7);
-box-shadow: none;
-transform: none;
-font-size: 11px;
-font-weight: normal;
-outline: 1px solid rgba(0,150,255,.4);
-z-index:25;
-}
-.dot:focus {
-outline: none;
-}
-
-
-/* ================= ROUTE TOGGLE ================= */
-
-let routesVisible=true;
-
-document.getElementById("route-toggle").onclick=()=>{
-
-routesVisible=!routesVisible;
-routesSVG.style.display=routesVisible?"block":"none";
-
-document.getElementById("route-toggle").textContent=
-routesVisible?"Routes : ON":"Routes : OFF";
-
-};
+.planet.selected{z-index:20;}
+.planet.selected .label{z-index:25;}
 
 </style>
 </head>
@@ -297,10 +252,9 @@ routesVisible?"Routes : ON":"Routes : OFF";
 <div id="route-toggle">Routes : ON</div>
 
 <div id="map-world">
-
 <svg id="routes-layer" width="100%" height="100%"></svg>
-
 </div>
+
 </div>
 
 <div id="info">Click on a planet</div>
@@ -312,12 +266,13 @@ routesVisible?"Routes : ON":"Routes : OFF";
 let scale=1,posX=0,posY=0;
 let dragging=false,lastX=0,lastY=0;
 
+let velocityX=0,velocityY=0,inertiaActive=false;
+
 const world=document.getElementById("map-world");
 const viewport=document.getElementById("map-container");
 
 function updateTransform(){
-world.style.transform=`scale(${scale}) translate(${posX}px,${posY}px)`;
-
+world.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
 buildRoutes();
 }
 
@@ -330,79 +285,60 @@ scale=Math.max(.6,Math.min(2.5,scale));
 updateTransform();
 },{passive:false});
 
-/* ================= DRAG + INERTIA ================= */
+/* DRAG */
 
-let velocityX = 0;
-let velocityY = 0;
-let inertiaActive = false;
-
-viewport.addEventListener("mousedown", e => {
-
-dragging = true;
-inertiaActive = false;
-
-lastX = e.clientX;
-lastY = e.clientY;
-
-velocityX = 0;
-velocityY = 0;
-
+viewport.addEventListener("mousedown",e=>{
+dragging=true;
+inertiaActive=false;
+lastX=e.clientX;
+lastY=e.clientY;
+velocityX=0;
+velocityY=0;
 });
 
-window.addEventListener("mouseup", () => {
-
-dragging = false;
-inertiaActive = true;
-
+window.addEventListener("mouseup",()=>{
+dragging=false;
+inertiaActive=true;
 requestAnimationFrame(applyInertia);
-
 });
 
-window.addEventListener("mousemove", e => {
+window.addEventListener("mousemove",e=>{
+if(!dragging)return;
 
-if(!dragging) return;
+const dx=e.clientX-lastX;
+const dy=e.clientY-lastY;
 
-const dx = e.clientX - lastX;
-const dy = e.clientY - lastY;
+posX+=dx;
+posY+=dy;
 
-posX += dx;
-posY += dy;
+velocityX=dx;
+velocityY=dy;
 
-velocityX = dx;
-velocityY = dy;
-
-lastX = e.clientX;
-lastY = e.clientY;
+lastX=e.clientX;
+lastY=e.clientY;
 
 updateTransform();
-
 });
 
+/* INERTIA */
+
 function applyInertia(){
+if(!inertiaActive)return;
 
-if(!inertiaActive) return;
+velocityX*=0.9;
+velocityY*=0.9;
 
-/* friction */
-velocityX *= 0.90;
-velocityY *= 0.90;
-
-/* stop threshold */
-if(Math.abs(velocityX) < 0.05 && Math.abs(velocityY) < 0.05){
-inertiaActive = false;
+if(Math.abs(velocityX)<0.05 && Math.abs(velocityY)<0.05){
+inertiaActive=false;
 return;
 }
 
-posX += velocityX;
-posY += velocityY;
+posX+=velocityX;
+posY+=velocityY;
 
 updateTransform();
-
 requestAnimationFrame(applyInertia);
-
 }
-
-
-
 
 /* ================= ROUTES ================= */
 
@@ -418,12 +354,9 @@ const rect=viewport.getBoundingClientRect();
 const points=[];
 
 planets.forEach(p=>{
-
 const x=parseFloat(p.style.left)/100*rect.width;
 const y=parseFloat(p.style.top)/100*rect.height;
-
 points.push({x,y});
-
 });
 
 for(let i=0;i<points.length;i++){
@@ -448,68 +381,48 @@ routesSVG.appendChild(line);
 }
 }
 }
-
 }
 
-/* ================= INFO PANEL ================= */
+/* ================= SELECT PLANET ================= */
 
 function selectPlanet(el){
 
 const p=el.closest(".planet");
 
-/* CLEAR OLD */
-
-document.querySelectorAll(".planet").forEach(pl=>{
-pl.classList.remove("selected");
-});
-
-/* SELECT */
-
+document.querySelectorAll(".planet").forEach(pl=>pl.classList.remove("selected"));
 p.classList.add("selected");
 
 /* CAMERA CENTER */
 
-const mapRect=viewport.getBoundingClientRect();
+const rect=viewport.getBoundingClientRect();
 
-const planetX=parseFloat(p.style.left)/100*mapRect.width;
-const planetY=parseFloat(p.style.top)/100*mapRect.height;
+const px=parseFloat(p.style.left)/100*rect.width;
+const py=parseFloat(p.style.top)/100*rect.height;
 
-posX = (mapRect.width / 2 / scale) - planetX;
-posY = (mapRect.height / 2 / scale) - planetY;
+posX=(rect.width/2/scale)-px;
+posY=(rect.height/2/scale)-py;
 
 world.style.transition="transform .5s ease";
 updateTransform();
 
-setTimeout(()=>{
-world.style.transition="";
-},500);
+setTimeout(()=>world.style.transition="",500);
 
-/* INFO PANEL */
+/* INFO */
 
 let img="";
-
 if(p.dataset.image){
 img=`<img src="static/${p.dataset.image}" class="info-image">`;
 }
 
-/* PATROL NAMES */
+let patrolHTML="";
 
-let patrolHTML = "";
-
-if(p.dataset.patrolnames && p.dataset.patrolnames.trim() !== ""){
-
-const names = p.dataset.patrolnames.split(";");
-
-patrolHTML = `
+if(p.dataset.patrolnames){
+const names=p.dataset.patrolnames.split(";");
+patrolHTML=`
 <hr>
 <b>Patrol Units:</b>
-<ul>
-${names.map(n=>`<li>${n.trim()}</li>`).join("")}
-</ul>
-`;
+<ul>${names.map(n=>`<li>${n.trim()}</li>`).join("")}</ul>`;
 }
-
-/* FINAL */
 
 document.getElementById("info").innerHTML=`
 ${img}
@@ -520,70 +433,21 @@ ${patrolHTML}
 <br>
 <a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
 `;
-
 }
 
+/* ================= ROUTE TOGGLE ================= */
 
-/* ================= CENTER CAMERA ================= */
+let routesVisible=true;
 
-const mapRect=viewport.getBoundingClientRect();
+document.getElementById("route-toggle").onclick=()=>{
 
-const planetX=parseFloat(p.style.left)/100*mapRect.width;
-const planetY=parseFloat(p.style.top)/100*mapRect.height;
+routesVisible=!routesVisible;
+routesSVG.style.display=routesVisible?"block":"none";
 
-/* CENTER WITH SCALE */
+document.getElementById("route-toggle").textContent=
+routesVisible?"Routes : ON":"Routes : OFF";
 
-posX = (mapRect.width / 2 / scale) - planetX;
-posY = (mapRect.height / 2 / scale) - planetY;
-
-/* SMOOTH MOVE */
-
-world.style.transition="transform .5s ease";
-updateTransform();
-
-setTimeout(()=>{
-world.style.transition="";
-},500);
-
-
-
-/* ================= INFO PANEL ================= */
-
-let img="";
-
-if(p.dataset.image){
-img=`<img src="static/${p.dataset.image}" class="info-image">`;
-}
-
-/* PATROL NAMES */
-
-let patrolHTML = "";
-
-if(p.dataset.patrolnames && p.dataset.patrolnames.trim() !== ""){
-
-const names = p.dataset.patrolnames.split(";");
-
-patrolHTML = `
-<hr>
-<b>Patrol Units:</b><br>
-<ul>
-${names.map(n=>`<li>${n.trim()}</li>`).join("")}
-</ul>
-`;
-}
-
-/* FINAL INFO */
-
-document.getElementById("info").innerHTML=`
-${img}
-<h3>${p.dataset.name}</h3>
-<b>Faction:</b> ${p.dataset.faction}<br><br>
-${p.dataset.desc}
-${patrolHTML}
-<br>
-<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
-`;
-
+};
 
 /* ================= LOAD DATA ================= */
 
@@ -604,8 +468,7 @@ planet.dataset.faction=p.Faction;
 planet.dataset.desc=p.Description;
 planet.dataset.wiki=p.Wiki;
 planet.dataset.image=p.Image||"";
-planet.dataset.patrolnames = p.PatrolNames || "";
-
+planet.dataset.patrolnames=p.PatrolNames||"";
 
 /* DOT */
 
@@ -642,26 +505,7 @@ buildRoutes();
 
 });
 
-
-
-
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
