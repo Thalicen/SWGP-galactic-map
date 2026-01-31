@@ -428,10 +428,28 @@ buildRoutes();
 
 });
 
+
+  /* REMOVE BLUE SELECTION EFFECT — KEEP ONLY FRONT LAYER */
+
+.planet.selected .label{
+background: rgba(0,0,0,.7) !important;
+box-shadow: none !important;
+transform: none !important;
+font-size: 11px !important;
+font-weight: normal !important;
+z-index: 25;
+}
+.planet.selected .label{
+background: rgba(0,0,0,.7);
+outline: 1px solid rgba(0,150,255,.4);
+z-index:25;
+}
+
 </script>
 
 </body>
 </html>
+
 
 
 
