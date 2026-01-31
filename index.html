@@ -271,7 +271,8 @@ const world=document.getElementById("map-world");
 const viewport=document.getElementById("map-container");
 
 function updateTransform(){
-world.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
+world.style.transform=`scale(${scale}) translate(${posX}px,${posY}px)`;
+
 buildRoutes();
 }
 
@@ -430,8 +431,8 @@ const planetY=parseFloat(p.style.top)/100*mapRect.height;
 
 /* CENTER WITH SCALE */
 
-posX=mapRect.width/2-planetX*scale;
-posY=mapRect.height/2-planetY*scale;
+posX = (mapRect.width / 2 / scale) - planetX;
+posY = (mapRect.height / 2 / scale) - planetY;
 
 /* SMOOTH MOVE */
 
@@ -537,6 +538,7 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
 
