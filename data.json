@@ -10,7 +10,7 @@
     "PatrolNames": "",
     "X": "24.5",
     "Y": "28.5",
-    "PatrolCount": "0",
+    "PatrolCount": "1",
     "CapitalShip": "0",
     "Image": "Ilum.png"
   },
@@ -26,7 +26,7 @@
     "X": "53",
     "Y": "38.5",
     "PatrolCount": "0",
-    "CapitalShip": "0",
+    "CapitalShip": "2",
     "Image": "Coruscant.png"
   },
   {
@@ -40,8 +40,8 @@
     "PatrolNames": "",
     "X": "49.5",
     "Y": "41",
-    "PatrolCount": "0",
-    "CapitalShip": "1",
+    "PatrolCount": "3",
+    "CapitalShip": "0",
     "Image": "Tython.png"
   },
   {
