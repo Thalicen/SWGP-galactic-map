@@ -62,15 +62,13 @@ width:100%;
 height:100%;
 transform-origin:center center;
 z-index:2;
-
-/* FIX */
 pointer-events:auto;
+will-change:transform;
+backface-visibility:hidden;
 }
-
 
 /* ================= PLANETS ================= */
 
-.planet{
 .planet{
 z-index:20;
 pointer-events:auto;
@@ -84,19 +82,15 @@ justify-content:center;
 cursor:pointer;
 }
 
-
 /* DOT */
 
 .dot{
 width:12px;
 height:12px;
 border-radius:50%;
-
-/* fallback */
 background:#4db8ff;
 box-shadow:0 0 8px #4db8ff;
 }
-
 
 /* FACTIONS */
 
@@ -203,19 +197,18 @@ rotate(-360deg);
 }
 
 /* ================= ROUTES ================= */
-#routes-layer{
+
 #routes-layer{
 position:absolute;
 width:100%;
 height:100%;
 pointer-events:none;
-z-index:5; /* inférieur aux planètes */
+z-index:5;
 }
-
 
 .route-line{
 stroke:rgba(0,170,255,.55);
-stroke-width:0.35;
+stroke-width:.35;
 stroke-linecap:round;
 vector-effect: non-scaling-stroke;
 filter: drop-shadow(0 0 3px rgba(0,170,255,.6));
@@ -259,7 +252,7 @@ background:#0a2a55;
 border-radius:8px;
 cursor:pointer;
 border:1px solid rgba(0,150,255,.6);
-z-index:10;
+z-index:30;
 }
 
 /* ================= MOBILE ================= */
@@ -351,41 +344,6 @@ lastY=e.clientY;
 updateTransform();
 });
 
-/* TOUCH */
-
-viewport.addEventListener("touchstart",e=>{
-dragging=true;
-const t=e.touches[0];
-lastX=t.clientX;
-lastY=t.clientY;
-},{passive:false});
-
-viewport.addEventListener("touchmove",e=>{
-if(!dragging)return;
-e.preventDefault();
-
-const t=e.touches[0];
-const dx=t.clientX-lastX;
-const dy=t.clientY-lastY;
-
-posX+=dx;
-posY+=dy;
-
-velocityX=dx;
-velocityY=dy;
-
-lastX=t.clientX;
-lastY=t.clientY;
-
-updateTransform();
-},{passive:false});
-
-viewport.addEventListener("touchend",()=>{
-dragging=false;
-inertiaActive=true;
-requestAnimationFrame(applyInertia);
-});
-
 /* INERTIA */
 
 function applyInertia(){
@@ -405,7 +363,6 @@ posY+=velocityY;
 
 updateTransform();
 requestAnimationFrame(applyInertia);
-
 }
 
 /* ================= ROUTES ================= */
@@ -420,9 +377,7 @@ line.setAttribute("x2",b.x);
 line.setAttribute("y2",b.y);
 
 line.classList.add("route-line");
-
 routesSVG.appendChild(line);
-
 }
 
 function buildRoutes(){
@@ -439,48 +394,38 @@ y:parseFloat(p.style.top)
 });
 });
 
-const maxDist = 28;
+const maxDist=28;
 
-/* MAIN NETWORK */
+/* Local links */
 
 for(let i=0;i<points.length;i++){
 for(let j=i+1;j<points.length;j++){
 
-const dx=points[i].x-points[j].x;
-const dy=points[i].y-points[j].y;
-const dist=Math.hypot(dx,dy);
+const d=Math.hypot(points[i].x-points[j].x,points[i].y-points[j].y);
 
-if(dist < maxDist){
+if(d<maxDist){
 drawRoute(points[i],points[j]);
 }
 
 }
 }
 
-/* FORCE CONNECTIVITY */
+/* Guarantee connectivity */
 
 points.forEach((p,i)=>{
 
-let nearest=null;
-let best=Infinity;
+let best=Infinity,nearest=null;
 
 points.forEach((q,j)=>{
 if(i===j)return;
 
 const d=Math.hypot(p.x-q.x,p.y-q.y);
-
-if(d<best){
-best=d;
-nearest=q;
-}
+if(d<best){best=d;nearest=q;}
 });
 
-if(nearest){
-drawRoute(p,nearest);
-}
+if(nearest) drawRoute(p,nearest);
 
 });
-
 }
 
 /* ================= SELECT ================= */
@@ -502,7 +447,6 @@ posY=(rect.height/2/scale)-py;
 
 world.style.transition="transform .5s ease";
 updateTransform();
-
 setTimeout(()=>world.style.transition="",500);
 
 /* INFO */
@@ -510,7 +454,6 @@ setTimeout(()=>world.style.transition="",500);
 let img=p.dataset.image?`<img src="static/${p.dataset.image}" class="info-image">`:"";
 
 let patrolHTML="";
-
 if(p.dataset.patrolnames){
 const names=p.dataset.patrolnames.split(";");
 patrolHTML=`<hr><b>Patrol Units:</b><ul>${names.map(n=>`<li>${n}</li>`).join("")}</ul>`;
@@ -525,7 +468,6 @@ ${patrolHTML}
 <br>
 <a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
 `;
-
 }
 
 /* ================= ROUTE TOGGLE ================= */
@@ -533,11 +475,9 @@ ${patrolHTML}
 let routesVisible=true;
 
 document.getElementById("route-toggle").onclick=()=>{
-
 routesVisible=!routesVisible;
 routesSVG.style.display=routesVisible?"block":"none";
 document.getElementById("route-toggle").textContent=routesVisible?"Routes : ON":"Routes : OFF";
-
 };
 
 /* ================= LOAD DATA ================= */
@@ -592,8 +532,3 @@ buildRoutes();
 
 </body>
 </html>
-
-
-
-
-
