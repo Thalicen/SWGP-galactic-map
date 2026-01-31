@@ -159,8 +159,46 @@ top:50%;
 width:36px;
 height:36px;
 pointer-events:none;
-transform:translate(-50%,-50%) translateY(-36px);
+
+transform-origin: center center;
+
+filter:
+drop-shadow(0 0 6px rgba(0,170,255,.6))
+drop-shadow(0 0 14px rgba(0,170,255,.4));
+
+animation:
+animation:
+capitalOrbit 20s linear infinite,
+capitalGlow 4s ease-in-out infinite;
 }
+
+/* ORBIT SLOW */
+
+@keyframes capitalOrbit{
+from{
+transform:
+translate(-50%,-50%)
+rotate(0deg)
+translate(44px)
+rotate(0deg);
+}
+to{
+transform:
+translate(-50%,-50%)
+rotate(360deg)
+translate(44px)
+rotate(-360deg);
+}
+}
+
+/* GLOW PULSE */
+
+@keyframes capitalGlow{
+0%{filter:drop-shadow(0 0 6px rgba(0,170,255,.4));}
+50%{filter:drop-shadow(0 0 14px rgba(0,170,255,.9));}
+100%{filter:drop-shadow(0 0 6px rgba(0,170,255,.4));}
+}
+
 
 /* ================= ROUTES ================= */
 
@@ -538,6 +576,7 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
 
