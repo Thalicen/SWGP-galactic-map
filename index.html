@@ -215,30 +215,6 @@ stroke-width:.7;
 }
 
 
-/* ================= INFO PANEL ================= */
-
-let img="";
-
-if(p.dataset.image){
-img=`<img src="static/${p.dataset.image}" class="info-image">`;
-}
-
-/* PATROL NAMES */
-
-let patrolHTML = "";
-
-if(p.dataset.patrolnames && p.dataset.patrolnames.trim() !== ""){
-
-const names = p.dataset.patrolnames.split(";");
-
-patrolHTML = `
-<hr>
-<b>Patrol Units:</b><br>
-<ul>
-${names.map(n=>`<li>${n.trim()}</li>`).join("")}
-</ul>
-`;
-}
 
 /* FINAL INFO */
 
@@ -294,6 +270,20 @@ z-index:25;
 outline: none;
 }
 
+
+/* ================= ROUTE TOGGLE ================= */
+
+let routesVisible=true;
+
+document.getElementById("route-toggle").onclick=()=>{
+
+routesVisible=!routesVisible;
+routesSVG.style.display=routesVisible?"block":"none";
+
+document.getElementById("route-toggle").textContent=
+routesVisible?"Routes : ON":"Routes : OFF";
+
+};
 
 </style>
 </head>
@@ -467,15 +457,72 @@ function selectPlanet(el){
 
 const p=el.closest(".planet");
 
-/* REMOVE OLD SELECTION */
+/* CLEAR OLD */
 
 document.querySelectorAll(".planet").forEach(pl=>{
 pl.classList.remove("selected");
 });
 
-/* ADD SELECT */
+/* SELECT */
 
 p.classList.add("selected");
+
+/* CAMERA CENTER */
+
+const mapRect=viewport.getBoundingClientRect();
+
+const planetX=parseFloat(p.style.left)/100*mapRect.width;
+const planetY=parseFloat(p.style.top)/100*mapRect.height;
+
+posX = (mapRect.width / 2 / scale) - planetX;
+posY = (mapRect.height / 2 / scale) - planetY;
+
+world.style.transition="transform .5s ease";
+updateTransform();
+
+setTimeout(()=>{
+world.style.transition="";
+},500);
+
+/* INFO PANEL */
+
+let img="";
+
+if(p.dataset.image){
+img=`<img src="static/${p.dataset.image}" class="info-image">`;
+}
+
+/* PATROL NAMES */
+
+let patrolHTML = "";
+
+if(p.dataset.patrolnames && p.dataset.patrolnames.trim() !== ""){
+
+const names = p.dataset.patrolnames.split(";");
+
+patrolHTML = `
+<hr>
+<b>Patrol Units:</b>
+<ul>
+${names.map(n=>`<li>${n.trim()}</li>`).join("")}
+</ul>
+`;
+}
+
+/* FINAL */
+
+document.getElementById("info").innerHTML=`
+${img}
+<h3>${p.dataset.name}</h3>
+<b>Faction:</b> ${p.dataset.faction}<br><br>
+${p.dataset.desc}
+${patrolHTML}
+<br>
+<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
+`;
+
+}
+
 
 /* ================= CENTER CAMERA ================= */
 
@@ -498,7 +545,7 @@ setTimeout(()=>{
 world.style.transition="";
 },500);
 
-/* ================= INFO PANEL ================= */
+
 
 /* ================= INFO PANEL ================= */
 
@@ -537,19 +584,6 @@ ${patrolHTML}
 <a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
 `;
 
-/* ================= ROUTE TOGGLE ================= */
-
-let routesVisible=true;
-
-document.getElementById("route-toggle").onclick=()=>{
-
-routesVisible=!routesVisible;
-routesSVG.style.display=routesVisible?"block":"none";
-
-document.getElementById("route-toggle").textContent=
-routesVisible?"Routes : ON":"Routes : OFF";
-
-};
 
 /* ================= LOAD DATA ================= */
 
@@ -615,6 +649,7 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
 
