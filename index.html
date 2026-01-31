@@ -482,22 +482,42 @@ world.style.transition="";
 
 /* ================= INFO PANEL ================= */
 
+/* ================= INFO PANEL ================= */
+
 let img="";
 
 if(p.dataset.image){
 img=`<img src="static/${p.dataset.image}" class="info-image">`;
 }
 
+/* PATROL NAMES */
+
+let patrolHTML = "";
+
+if(p.dataset.patrolnames && p.dataset.patrolnames.trim() !== ""){
+
+const names = p.dataset.patrolnames.split(";");
+
+patrolHTML = `
+<hr>
+<b>Patrol Units:</b><br>
+<ul>
+${names.map(n=>`<li>${n.trim()}</li>`).join("")}
+</ul>
+`;
+}
+
+/* FINAL INFO */
+
 document.getElementById("info").innerHTML=`
 ${img}
 <h3>${p.dataset.name}</h3>
 <b>Faction:</b> ${p.dataset.faction}<br><br>
-${p.dataset.desc}<br><br>
+${p.dataset.desc}
+${patrolHTML}
+<br>
 <a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
 `;
-
-}
-
 
 /* ================= ROUTE TOGGLE ================= */
 
@@ -532,6 +552,8 @@ planet.dataset.faction=p.Faction;
 planet.dataset.desc=p.Description;
 planet.dataset.wiki=p.Wiki;
 planet.dataset.image=p.Image||"";
+planet.dataset.patrolnames = p.PatrolNames || "";
+
 
 /* DOT */
 
