@@ -71,29 +71,37 @@ backface-visibility:hidden;
 /* ================= PLANETS ================= */
 
 .planet{
-z-index:20;
-pointer-events:auto;
 position:absolute;
 transform:translate(-50%,-50%);
 width:25px;
 height:25px;
-display:flex;
-align-items:center;
-justify-content:center;
+z-index:20;
+pointer-events:auto;
 cursor:pointer;
-user-select:none;
 }
+
 
 /* DOT */
 
 .dot{
-position:relative;
-z-index:30;
+width:12px;
+height:12px;
+border-radius:50%;
+background:#4db8ff;
+box-shadow:0 0 8px #4db8ff;
+
 display:block;
-min-width:12px;
-min-height:12px;
-opacity:1;
+flex-shrink:0;
 }
+
+
+.planet .dot{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+}
+
 
 
 /* FACTIONS */
@@ -536,4 +544,5 @@ buildRoutes();
 
 </body>
 </html>
+
 
