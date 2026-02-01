@@ -142,12 +142,19 @@ animation:orbit 6s linear infinite;
 
 @keyframes orbit{
 from{
-transform:translate(-50%,-50%) rotate(calc(var(--i)*25deg)) translate(26px);
+transform:
+translate(-50%,-50%)
+rotate(calc(var(--i)*25deg))
+translate(26px);
 }
 to{
-transform:translate(-50%,-50%) rotate(calc(var(--i)*25deg + 360deg)) translate(26px);
+transform:
+translate(-50%,-50%)
+rotate(calc(var(--i)*25deg + 360deg))
+translate(26px);
 }
 }
+
 
 /* CAPITAL SHIPS */
 
@@ -162,9 +169,20 @@ animation:capitalOrbit 14s linear infinite;
 }
 
 @keyframes capitalOrbit{
-from{transform:translate(-50%,-50%) rotate(0deg) translate(44px);}
-to{transform:translate(-50%,-50%) rotate(360deg) translate(44px);}
+from{
+transform:
+translate(-50%,-50%)
+rotate(0deg)
+translate(44px);
 }
+to{
+transform:
+translate(-50%,-50%)
+rotate(360deg)
+translate(44px);
+}
+}
+
 
 /* ================= ROUTES ================= */
 
@@ -443,3 +461,4 @@ buildRoutes();
 
 </body>
 </html>
+
