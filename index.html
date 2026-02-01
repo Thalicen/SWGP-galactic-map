@@ -129,59 +129,77 @@ pointer-events:none;
 
 /* ================= SHIPS ================= */
 
-.ship-icon{
+
+.ship-orbit{
 position:absolute;
 left:50%;
 top:50%;
+width:0;
+height:0;
+transform-origin:center;
+animation: orbit 6s linear infinite;
+}
+
+.ship-icon{
 width:18px;
 pointer-events:none;
-transform-origin:center;
-filter:drop-shadow(0 0 6px rgba(0,170,255,.8));
-animation:orbit 6s linear infinite;
+
+filter:
+drop-shadow(0 0 6px rgba(0,170,255,.8))
+drop-shadow(0 0 12px rgba(0,170,255,.4));
+
+animation: pulseGlow 2.5s ease-in-out infinite;
 }
+
 
 @keyframes orbit{
 from{
 transform:
-translate(-50%,-50%)
 rotate(calc(var(--i)*25deg))
 translate(26px);
 }
 to{
 transform:
-translate(-50%,-50%)
 rotate(calc(var(--i)*25deg + 360deg))
 translate(26px);
 }
 }
 
 
+
 /* CAPITAL SHIPS */
 
-.capital-ship{
+.capital-orbit{
 position:absolute;
 left:50%;
 top:50%;
+width:0;
+height:0;
+transform-origin:center;
+animation: capitalOrbit 14s linear infinite;
+}
+
+
+.capital-ship{
 width:36px;
 pointer-events:none;
-filter:drop-shadow(0 0 10px rgba(0,170,255,.7));
-animation:capitalOrbit 14s linear infinite;
+
+filter:
+drop-shadow(0 0 6px rgba(0,170,255,.6))
+drop-shadow(0 0 14px rgba(0,170,255,.4));
+
+animation: capitalGlow 3s ease-in-out infinite;
 }
 
 @keyframes capitalOrbit{
 from{
-transform:
-translate(-50%,-50%)
-rotate(0deg)
-translate(44px);
+transform: rotate(0deg) translate(44px);
 }
 to{
-transform:
-translate(-50%,-50%)
-rotate(360deg)
-translate(44px);
+transform: rotate(360deg) translate(44px);
 }
 }
+
 
 
 /* ================= ROUTES ================= */
@@ -442,11 +460,19 @@ planet.onclick=()=>selectPlanet(planet);
 /* Ships */
 
 for(let i=0;i<(p.PatrolCount||0);i++){
-planet.innerHTML+=`<img src="static/patrol_ship.png" class="ship-icon" style="--i:${i}">`;
+planet.innerHTML+=`
+<div class="ship-orbit" style="--i:${i}">
+    <img src="static/patrol_ship.png" class="ship-icon">
+</div>`;
+
 }
 
 for(let i=0;i<(p.CapitalShip||0);i++){
-planet.innerHTML+=`<img src="static/capital_ship.png" class="capital-ship">`;
+planet.innerHTML+=`
+<div class="capital-orbit">
+    <img src="static/capital_ship.png" class="capital-ship">
+</div>`;
+
 }
 
 planetLayer.appendChild(planet);
@@ -461,4 +487,5 @@ buildRoutes();
 
 </body>
 </html>
+
 
