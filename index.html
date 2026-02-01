@@ -128,8 +128,6 @@ pointer-events:none;
 
 /* ================= SHIPS ================= */
 
-/* ORBIT ROTATOR */
-
 .ship-orbit{
 position:absolute;
 left:50%;
@@ -140,30 +138,40 @@ transform-origin:center;
 animation: orbit 6s linear infinite;
 }
 
-/* RADIAL OFFSET */
+/* distance from planet */
 
 .ship-offset{
-transform: rotate(var(--angle)) translateX(26px);
+transform: translateX(26px);
 }
 
-/* SHIP SPRITE (counter rotation) */
+/* sprite */
 
 .ship-icon{
 width:18px;
 pointer-events:none;
-transform: rotate(calc(var(--angle) * -1));
+
+/* COUNTER ROTATION */
+animation: counterOrbit 6s linear infinite;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.8))
 drop-shadow(0 0 12px rgba(0,170,255,.4));
 }
 
-/* ORBIT ANIMATION */
+/* ORBIT */
 
 @keyframes orbit{
-from{transform:rotate(0deg);}
-to{transform:rotate(360deg);}
+from{ transform:rotate(0deg); }
+to{ transform:rotate(360deg); }
 }
+
+/* COUNTER ROTATION */
+
+@keyframes counterOrbit{
+from{ transform:rotate(0deg); }
+to{ transform:rotate(-360deg); }
+}
+
 
 /* ================= CAPITAL SHIPS ================= */
 
@@ -178,13 +186,14 @@ animation: capitalOrbit 14s linear infinite;
 }
 
 .capital-offset{
-transform: rotate(var(--angle)) translateX(44px);
+transform: translateX(44px);
 }
 
 .capital-ship{
 width:36px;
 pointer-events:none;
-transform: rotate(calc(var(--angle) * -1));
+
+animation: capitalCounter 14s linear infinite;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.6))
@@ -192,8 +201,13 @@ drop-shadow(0 0 14px rgba(0,170,255,.4));
 }
 
 @keyframes capitalOrbit{
-from{transform:rotate(0deg);}
-to{transform:rotate(360deg);}
+from{ transform:rotate(0deg); }
+to{ transform:rotate(360deg); }
+}
+
+@keyframes capitalCounter{
+from{ transform:rotate(0deg); }
+to{ transform:rotate(-360deg); }
 }
 
 /* ================= ROUTES ================= */
@@ -468,13 +482,14 @@ for(let i=0;i<patrolCount;i++){
 
 const angle=(360/patrolCount)*i;
 
-planet.innerHTML+=`
+planet.innerHTML += `
 <div class="ship-orbit">
- <div class="ship-offset" style="--angle:${angle}deg">
-  <img src="static/patrol_ship.png" class="ship-icon" style="--angle:${angle}deg">
- </div>
-</div>`;
-}
+  <div class="ship-offset">
+    <img src="static/patrol_ship.png" class="ship-icon">
+  </div>
+</div>
+`;
+
 
 /* CAPITAL SHIPS */
 
@@ -484,13 +499,14 @@ for(let i=0;i<capitalCount;i++){
 
 const angle=(360/capitalCount)*i;
 
-planet.innerHTML+=`
+planet.innerHTML += `
 <div class="capital-orbit">
- <div class="capital-offset" style="--angle:${angle}deg">
-  <img src="static/capital_ship.png" class="capital-ship" style="--angle:${angle}deg">
- </div>
-</div>`;
-}
+  <div class="capital-offset">
+    <img src="static/capital_ship.png" class="capital-ship">
+  </div>
+</div>
+`;
+
 
 planetLayer.appendChild(planet);
 
@@ -504,3 +520,4 @@ buildRoutes();
 
 </body>
 </html>
+
