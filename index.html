@@ -19,10 +19,7 @@ background-attachment:fixed;
 background-color:#050814;
 }
 
-h2{
-text-align:center;
-margin:12px 0;
-}
+h2{text-align:center;margin:12px 0;}
 
 /* ================= MAP ================= */
 
@@ -57,52 +54,55 @@ z-index:1;
 /* WORLD */
 
 #map-world{
-overflow:visible;
 position:absolute;
 width:100%;
 height:100%;
 transform-origin:center center;
 z-index:2;
-pointer-events:auto;
 will-change:transform;
-backface-visibility:hidden;
+}
+
+/* ================= LAYERS ================= */
+
+#routes-layer{
+position:absolute;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:2;
+}
+
+#planet-layer{
+position:absolute;
+width:100%;
+height:100%;
+z-index:10;
+pointer-events:auto;
 }
 
 /* ================= PLANETS ================= */
 
 .planet{
 position:absolute;
-transform:translate(-50%,-50%);
+transform:translate(-50%,-50%) translateZ(0);
 width:25px;
 height:25px;
-z-index:20;
-pointer-events:auto;
 cursor:pointer;
 }
-
 
 /* DOT */
 
 .dot{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
 width:12px;
 height:12px;
 border-radius:50%;
 background:#4db8ff;
 box-shadow:0 0 8px #4db8ff;
-
-display:block;
-flex-shrink:0;
 }
-
-
-.planet .dot{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-}
-
-
 
 /* FACTIONS */
 
@@ -115,14 +115,16 @@ transform:translate(-50%,-50%);
 /* LABEL */
 
 .label{
-margin-top:22px;
+position:absolute;
+top:100%;
+left:50%;
+transform:translateX(-50%) translateY(8px);
 font-size:11px;
 background:rgba(0,0,0,.7);
 padding:3px 6px;
 border-radius:5px;
 white-space:nowrap;
 pointer-events:none;
-transform: translateY(10px);
 }
 
 /* ================= SHIPS ================= */
@@ -134,37 +136,17 @@ top:50%;
 width:18px;
 pointer-events:none;
 transform-origin:center;
-
-filter:
-drop-shadow(0 0 6px rgba(0,170,255,.8))
-drop-shadow(0 0 12px rgba(0,170,255,.4));
-
-animation:
-orbit 6s linear infinite,
-pulseGlow 2.5s ease-in-out infinite;
+filter:drop-shadow(0 0 6px rgba(0,170,255,.8));
+animation:orbit 6s linear infinite;
 }
 
 @keyframes orbit{
 from{
-transform:
-translate(-50%,-50%)
-rotate(calc(var(--i)*25deg))
-translate(26px)
-rotate(calc(var(--i)*-25deg));
+transform:translate(-50%,-50%) rotate(calc(var(--i)*25deg)) translate(26px);
 }
 to{
-transform:
-translate(-50%,-50%)
-rotate(calc(var(--i)*25deg + 360deg))
-translate(26px)
-rotate(calc(var(--i)*-25deg - 360deg));
+transform:translate(-50%,-50%) rotate(calc(var(--i)*25deg + 360deg)) translate(26px);
 }
-}
-
-@keyframes pulseGlow{
-0%{ filter: drop-shadow(0 0 4px rgba(0,170,255,.5)); }
-50%{ filter: drop-shadow(0 0 10px rgba(0,170,255,.9)); }
-100%{ filter: drop-shadow(0 0 4px rgba(0,170,255,.5)); }
 }
 
 /* CAPITAL SHIPS */
@@ -175,62 +157,22 @@ left:50%;
 top:50%;
 width:36px;
 pointer-events:none;
-
-filter:
-drop-shadow(0 0 6px rgba(0,170,255,.6))
-drop-shadow(0 0 14px rgba(0,170,255,.4));
-
-animation:
-capitalOrbit 14s linear infinite,
-capitalGlow 3s ease-in-out infinite;
+filter:drop-shadow(0 0 10px rgba(0,170,255,.7));
+animation:capitalOrbit 14s linear infinite;
 }
 
 @keyframes capitalOrbit{
-from{
-transform:
-translate(-50%,-50%)
-rotate(0deg)
-translate(44px)
-rotate(0deg);
-}
-to{
-transform:
-translate(-50%,-50%)
-rotate(360deg)
-translate(44px)
-rotate(-360deg);
-}
-}
-
-@keyframes capitalGlow{
-0%{filter:drop-shadow(0 0 6px rgba(0,170,255,.4));}
-50%{filter:drop-shadow(0 0 14px rgba(0,170,255,.9));}
-100%{filter:drop-shadow(0 0 6px rgba(0,170,255,.4));}
+from{transform:translate(-50%,-50%) rotate(0deg) translate(44px);}
+to{transform:translate(-50%,-50%) rotate(360deg) translate(44px);}
 }
 
 /* ================= ROUTES ================= */
 
-#routes-layer{
-position:absolute;
-width:100%;
-height:100%;
-pointer-events:none;
-z-index:5;
-}
-
 .route-line{
 stroke:rgba(0,170,255,.55);
 stroke-width:.35;
-stroke-linecap:round;
 vector-effect: non-scaling-stroke;
-filter: drop-shadow(0 0 3px rgba(0,170,255,.6));
-animation: routeGlow 3s ease-in-out infinite;
-}
-
-@keyframes routeGlow{
-0%{opacity:.6;}
-50%{opacity:1;}
-100%{opacity:.6;}
+filter:drop-shadow(0 0 3px rgba(0,170,255,.6));
 }
 
 /* ================= INFO ================= */
@@ -264,17 +206,7 @@ background:#0a2a55;
 border-radius:8px;
 cursor:pointer;
 border:1px solid rgba(0,150,255,.6);
-z-index:30;
-}
-
-/* ================= MOBILE ================= */
-
-@media (max-width: 768px){
-
-.label{font-size:10px;}
-.ship-icon{width:14px;}
-.capital-ship{width:26px;}
-
+z-index:20;
 }
 
 </style>
@@ -289,7 +221,10 @@ z-index:30;
 <div id="route-toggle">Routes : ON</div>
 
 <div id="map-world">
+
 <svg id="routes-layer" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+<div id="planet-layer"></div>
+
 </div>
 
 </div>
@@ -302,11 +237,12 @@ z-index:30;
 
 let scale=1,posX=0,posY=0;
 let dragging=false,lastX=0,lastY=0;
-let velocityX=0,velocityY=0,inertiaActive=false;
+let velX=0,velY=0,inertia=false;
 
 const world=document.getElementById("map-world");
 const viewport=document.getElementById("map-container");
 const routesSVG=document.getElementById("routes-layer");
+const planetLayer=document.getElementById("planet-layer");
 
 function updateTransform(){
 world.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
@@ -325,17 +261,15 @@ updateTransform();
 
 viewport.addEventListener("mousedown",e=>{
 dragging=true;
-inertiaActive=false;
 lastX=e.clientX;
 lastY=e.clientY;
-velocityX=0;
-velocityY=0;
+velX=velY=0;
 });
 
 window.addEventListener("mouseup",()=>{
 dragging=false;
-inertiaActive=true;
-requestAnimationFrame(applyInertia);
+inertia=true;
+requestAnimationFrame(moveInertia);
 });
 
 window.addEventListener("mousemove",e=>{
@@ -347,8 +281,8 @@ const dy=e.clientY-lastY;
 posX+=dx;
 posY+=dy;
 
-velocityX=dx;
-velocityY=dy;
+velX=dx;
+velY=dy;
 
 lastX=e.clientX;
 lastY=e.clientY;
@@ -358,36 +292,32 @@ updateTransform();
 
 /* INERTIA */
 
-function applyInertia(){
+function moveInertia(){
+if(!inertia)return;
 
-if(!inertiaActive)return;
+velX*=0.9;
+velY*=0.9;
 
-velocityX*=0.9;
-velocityY*=0.9;
-
-if(Math.abs(velocityX)<0.05 && Math.abs(velocityY)<0.05){
-inertiaActive=false;
+if(Math.abs(velX)<0.1 && Math.abs(velY)<0.1){
+inertia=false;
 return;
 }
 
-posX+=velocityX;
-posY+=velocityY;
+posX+=velX;
+posY+=velY;
 
 updateTransform();
-requestAnimationFrame(applyInertia);
+requestAnimationFrame(moveInertia);
 }
 
 /* ================= ROUTES ================= */
 
 function drawRoute(a,b){
-
 const line=document.createElementNS("http://www.w3.org/2000/svg","line");
-
 line.setAttribute("x1",a.x);
 line.setAttribute("y1",a.y);
 line.setAttribute("x2",b.x);
 line.setAttribute("y2",b.y);
-
 line.classList.add("route-line");
 routesSVG.appendChild(line);
 }
@@ -395,12 +325,11 @@ routesSVG.appendChild(line);
 function buildRoutes(){
 
 routesSVG.innerHTML="";
-
 const planets=document.querySelectorAll(".planet");
-const points=[];
+const pts=[];
 
 planets.forEach(p=>{
-points.push({
+pts.push({
 x:parseFloat(p.style.left),
 y:parseFloat(p.style.top)
 });
@@ -408,42 +337,28 @@ y:parseFloat(p.style.top)
 
 const maxDist=28;
 
-/* Local links */
-
-for(let i=0;i<points.length;i++){
-for(let j=i+1;j<points.length;j++){
-
-const d=Math.hypot(points[i].x-points[j].x,points[i].y-points[j].y);
-
-if(d<maxDist){
-drawRoute(points[i],points[j]);
+for(let i=0;i<pts.length;i++){
+for(let j=i+1;j<pts.length;j++){
+if(Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y)<maxDist){
+drawRoute(pts[i],pts[j]);
 }
-
 }
 }
 
-/* Guarantee connectivity */
-
-points.forEach((p,i)=>{
-
-let best=Infinity,nearest=null;
-
-points.forEach((q,j)=>{
+pts.forEach((p,i)=>{
+let best=999,near=null;
+pts.forEach((q,j)=>{
 if(i===j)return;
-
 const d=Math.hypot(p.x-q.x,p.y-q.y);
-if(d<best){best=d;nearest=q;}
+if(d<best){best=d;near=q;}
 });
-
-if(nearest) drawRoute(p,nearest);
-
+if(near) drawRoute(p,near);
 });
 }
 
 /* ================= SELECT ================= */
 
 function selectPlanet(p){
-
 
 document.querySelectorAll(".planet").forEach(pl=>pl.classList.remove("selected"));
 p.classList.add("selected");
@@ -460,29 +375,15 @@ world.style.transition="transform .5s ease";
 updateTransform();
 setTimeout(()=>world.style.transition="",500);
 
-/* INFO */
-
-let img = "";
-
-if(p.dataset.image !== ""){
-img = `<img src="static/${p.dataset.image}" class="info-image">`;
-}
-
-let patrolHTML="";
-if(p.dataset.patrolnames){
-const names=p.dataset.patrolnames.split(";");
-patrolHTML=`<hr><b>Patrol Units:</b><ul>${names.map(n=>`<li>${n}</li>`).join("")}</ul>`;
-}
+const img=p.dataset.image?`<img src="static/${p.dataset.image}" class="info-image">`:"";
+const wiki=p.dataset.wiki!=="#"?`<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>`:"";
 
 document.getElementById("info").innerHTML=`
 ${img}
 <h3>${p.dataset.name}</h3>
 <b>Faction:</b> ${p.dataset.faction}<br><br>
 <p>${p.dataset.desc}</p>
-${patrolHTML}
-<br>
-${p.dataset.wiki !== "#" ? `<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>` : ""}
-
+${wiki}
 `;
 }
 
@@ -505,39 +406,32 @@ fetch("./data.json")
 planetes.forEach(p=>{
 
 const planet=document.createElement("div");
-
-planet.className="planet "+p.Faction.toLowerCase();
+planet.className="planet "+(p.Faction||"neutral").toLowerCase();
 
 planet.style.left=p.X+"%";
 planet.style.top=p.Y+"%";
 
-planet.dataset.name = p.Planete || "Unknown Planet";
-planet.dataset.faction = p.Faction || "Unknown";
-planet.dataset.desc = p.Description || "No description available.";
-planet.dataset.wiki = p.Wiki || "#";
-planet.dataset.image = p.Image || "";
-planet.dataset.patrolnames = p.PatrolNames || "";
+planet.dataset.name=p.Planete||"Unknown Planet";
+planet.dataset.faction=p.Faction||"Unknown";
+planet.dataset.desc=p.Description||"No description available.";
+planet.dataset.wiki=p.Wiki||"#";
+planet.dataset.image=p.Image||"";
 
+planet.innerHTML=`<div class="dot"></div><div class="label">${p.Planete}</div>`;
 
-planet.innerHTML=`<div class="dot" onclick="selectPlanet(this)"></div>`;
+planet.onclick=()=>selectPlanet(planet);
 
-/* PATROL */
+/* Ships */
 
 for(let i=0;i<(p.PatrolCount||0);i++){
 planet.innerHTML+=`<img src="static/patrol_ship.png" class="ship-icon" style="--i:${i}">`;
 }
 
-/* CAPITAL */
-
 for(let i=0;i<(p.CapitalShip||0);i++){
 planet.innerHTML+=`<img src="static/capital_ship.png" class="capital-ship">`;
 }
 
-/* LABEL */
-
-planet.innerHTML+=`<div class="label">${p.Planete}</div>`;
-
-world.appendChild(planet);
+planetLayer.appendChild(planet);
 
 });
 
@@ -545,11 +439,7 @@ buildRoutes();
 
 });
 
-
 </script>
 
 </body>
 </html>
-
-
-
