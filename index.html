@@ -129,6 +129,7 @@ pointer-events:none;
 
 /* ================= SHIPS ================= */
 
+/* ORBIT CONTAINER */
 
 .ship-orbit{
 position:absolute;
@@ -140,34 +141,31 @@ transform-origin:center;
 animation: orbit 6s linear infinite;
 }
 
+/* HOLDER = OFFSET ONLY */
+
+.ship-holder{
+transform: translateX(26px);
+}
+
+/* SHIP SPRITE */
+
 .ship-icon{
 width:18px;
 pointer-events:none;
-
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.8))
 drop-shadow(0 0 12px rgba(0,170,255,.4));
-
 animation: pulseGlow 2.5s ease-in-out infinite;
 }
 
+/* ORBIT ROTATION ONLY */
 
 @keyframes orbit{
-from{
-transform:
-rotate(calc(var(--i)*25deg))
-translate(26px);
-}
-to{
-transform:
-rotate(calc(var(--i)*25deg + 360deg))
-translate(26px);
-}
+from{ transform: rotate(0deg); }
+to{ transform: rotate(360deg); }
 }
 
-
-
-/* CAPITAL SHIPS */
+/* ================= CAPITAL SHIPS ================= */
 
 .capital-orbit{
 position:absolute;
@@ -179,28 +177,23 @@ transform-origin:center;
 animation: capitalOrbit 14s linear infinite;
 }
 
+.capital-holder{
+transform: translateX(44px);
+}
 
 .capital-ship{
 width:36px;
 pointer-events:none;
-
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.6))
 drop-shadow(0 0 14px rgba(0,170,255,.4));
-
 animation: capitalGlow 3s ease-in-out infinite;
 }
 
 @keyframes capitalOrbit{
-from{
-transform: rotate(0deg) translate(44px);
+from{ transform: rotate(0deg); }
+to{ transform: rotate(360deg); }
 }
-to{
-transform: rotate(360deg) translate(44px);
-}
-}
-
-
 
 /* ================= ROUTES ================= */
 
@@ -381,15 +374,6 @@ drawRoute(pts[i],pts[j]);
 }
 }
 
-pts.forEach((p,i)=>{
-let best=999,near=null;
-pts.forEach((q,j)=>{
-if(i===j)return;
-const d=Math.hypot(p.x-q.x,p.y-q.y);
-if(d<best){best=d;near=q;}
-});
-if(near) drawRoute(p,near);
-});
 }
 
 /* ================= SELECT ================= */
@@ -457,22 +441,26 @@ planet.innerHTML=`<div class="dot"></div><div class="label">${p.Planete}</div>`;
 
 planet.onclick=()=>selectPlanet(planet);
 
-/* Ships */
+/* PATROL SHIPS */
 
 for(let i=0;i<(p.PatrolCount||0);i++){
 planet.innerHTML+=`
-<div class="ship-orbit" style="--i:${i}">
-    <img src="static/patrol_ship.png" class="ship-icon">
+<div class="ship-orbit">
+    <div class="ship-holder">
+        <img src="static/patrol_ship.png" class="ship-icon">
+    </div>
 </div>`;
-
 }
+
+/* CAPITAL SHIPS */
 
 for(let i=0;i<(p.CapitalShip||0);i++){
 planet.innerHTML+=`
 <div class="capital-orbit">
-    <img src="static/capital_ship.png" class="capital-ship">
+    <div class="capital-holder">
+        <img src="static/capital_ship.png" class="capital-ship">
+    </div>
 </div>`;
-
 }
 
 planetLayer.appendChild(planet);
@@ -487,5 +475,7 @@ buildRoutes();
 
 </body>
 </html>
+
+
 
 
