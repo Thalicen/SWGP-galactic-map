@@ -462,7 +462,11 @@ setTimeout(()=>world.style.transition="",500);
 
 /* INFO */
 
-let img=p.dataset.image?`<img src="static/${p.dataset.image}" class="info-image">`:"";
+let img = "";
+
+if(p.dataset.image !== ""){
+img = `<img src="static/${p.dataset.image}" class="info-image">`;
+}
 
 let patrolHTML="";
 if(p.dataset.patrolnames){
@@ -474,10 +478,11 @@ document.getElementById("info").innerHTML=`
 ${img}
 <h3>${p.dataset.name}</h3>
 <b>Faction:</b> ${p.dataset.faction}<br><br>
-${p.dataset.desc}
+<p>${p.dataset.desc}</p>
 ${patrolHTML}
 <br>
-<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>
+${p.dataset.wiki !== "#" ? `<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>` : ""}
+
 `;
 }
 
@@ -506,12 +511,13 @@ planet.className="planet "+p.Faction.toLowerCase();
 planet.style.left=p.X+"%";
 planet.style.top=p.Y+"%";
 
-planet.dataset.name=p.Planete;
-planet.dataset.faction=p.Faction;
-planet.dataset.desc=p.Description;
-planet.dataset.wiki=p.Wiki;
-planet.dataset.image=p.Image||"";
-planet.dataset.patrolnames=p.PatrolNames||"";
+planet.dataset.name = p.Planete || "Unknown Planet";
+planet.dataset.faction = p.Faction || "Unknown";
+planet.dataset.desc = p.Description || "No description available.";
+planet.dataset.wiki = p.Wiki || "#";
+planet.dataset.image = p.Image || "";
+planet.dataset.patrolnames = p.PatrolNames || "";
+
 
 planet.innerHTML=`<div class="dot" onclick="selectPlanet(this)"></div>`;
 
@@ -544,5 +550,6 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
