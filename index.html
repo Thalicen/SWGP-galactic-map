@@ -124,12 +124,9 @@ padding:3px 6px;
 border-radius:5px;
 white-space:nowrap;
 pointer-events:none;
-z-index:50;
 }
 
 /* ================= SHIPS ================= */
-
-/* PATROL */
 
 .ship-orbit{
 position:absolute;
@@ -142,21 +139,23 @@ animation: orbitSpin 6s linear infinite;
 }
 
 .ship-radius{
-transform: translateX(26px);
+transform: translateX(var(--radius));
 }
 
 .ship-icon{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%) rotate(90deg);
 width:18px;
 pointer-events:none;
-
-animation: counterSpin 6s linear infinite;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.8))
 drop-shadow(0 0 12px rgba(0,170,255,.4));
 }
 
-/* CAPITAL */
+/* CAPITAL SHIPS */
 
 .capital-orbit{
 position:absolute;
@@ -169,14 +168,16 @@ animation: capitalSpin 14s linear infinite;
 }
 
 .capital-radius{
-transform: translateX(44px);
+transform: translateX(var(--radius));
 }
 
 .capital-ship{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%) rotate(90deg);
 width:36px;
 pointer-events:none;
-
-animation: capitalCounter 14s linear infinite;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.6))
@@ -190,19 +191,9 @@ from{ transform:rotate(0deg); }
 to{ transform:rotate(360deg); }
 }
 
-@keyframes counterSpin{
-from{ transform:rotate(0deg); }
-to{ transform:rotate(-360deg); }
-}
-
 @keyframes capitalSpin{
 from{ transform:rotate(0deg); }
 to{ transform:rotate(360deg); }
-}
-
-@keyframes capitalCounter{
-from{ transform:rotate(0deg); }
-to{ transform:rotate(-360deg); }
 }
 
 /* ================= ROUTES ================= */
@@ -226,14 +217,6 @@ border-radius:12px;
 border:1px solid rgba(0,150,255,.4);
 }
 
-.info-image{
-width:100%;
-max-height:220px;
-object-fit:cover;
-border-radius:8px;
-margin-bottom:10px;
-}
-
 /* ================= ROUTE BUTTON ================= */
 
 #route-toggle{
@@ -246,14 +229,6 @@ border-radius:8px;
 cursor:pointer;
 border:1px solid rgba(0,150,255,.6);
 z-index:20;
-}
-
-/* ================= MOBILE ================= */
-
-@media(max-width:768px){
-.label{font-size:10px;}
-.ship-icon{width:14px;}
-.capital-ship{width:26px;}
 }
 
 </style>
@@ -281,8 +256,7 @@ z-index:20;
 /* ================= CAMERA ================= */
 
 let scale=1,posX=0,posY=0;
-let dragging=false,lastX=0,lastY=0;
-let velX=0,velY=0,inertia=false;
+let dragging=false,lastX=0,lastY=0,velX=0,velY=0,inertia=false;
 
 const world=document.getElementById("map-world");
 const viewport=document.getElementById("map-container");
@@ -389,7 +363,6 @@ drawRoute(pts[i],pts[j]);
 }
 }
 }
-
 }
 
 /* ================= SELECT ================= */
@@ -408,10 +381,7 @@ world.style.transition="transform .5s ease";
 updateTransform();
 setTimeout(()=>world.style.transition="",500);
 
-const img=p.dataset.image?`<img src="static/${p.dataset.image}" class="info-image">`:"";
-
 document.getElementById("info").innerHTML=`
-${img}
 <h3>${p.dataset.name}</h3>
 <b>Faction:</b> ${p.dataset.faction}<br><br>
 <p>${p.dataset.desc}</p>
@@ -439,14 +409,12 @@ planetes.forEach(p=>{
 const planet=document.createElement("div");
 
 planet.className="planet "+(p.Faction||"neutral").toLowerCase();
-
 planet.style.left=p.X+"%";
 planet.style.top=p.Y+"%";
 
 planet.dataset.name=p.Planete||"Unknown";
 planet.dataset.faction=p.Faction||"Unknown";
-planet.dataset.desc=p.Description||"No description";
-planet.dataset.image=p.Image||"";
+planet.dataset.desc=p.Description||"No description available.";
 
 planet.innerHTML=`
 <div class="dot"></div>
@@ -460,12 +428,16 @@ planet.onclick=()=>selectPlanet(planet);
 const patrolCount=p.PatrolCount||0;
 
 for(let i=0;i<patrolCount;i++){
+
+const radius=26+(i*6);
+
 planet.innerHTML+=`
-<div class="ship-orbit" style="animation-delay:${i*0.4}s">
- <div class="ship-radius">
+<div class="ship-orbit" style="animation-delay:${i*0.5}s">
+ <div class="ship-radius" style="--radius:${radius}px">
   <img src="static/patrol_ship.png" class="ship-icon">
  </div>
-</div>`;
+</div>
+`;
 }
 
 /* CAPITAL SHIPS */
@@ -473,12 +445,16 @@ planet.innerHTML+=`
 const capitalCount=p.CapitalShip||0;
 
 for(let i=0;i<capitalCount;i++){
+
+const radius=44+(i*10);
+
 planet.innerHTML+=`
 <div class="capital-orbit" style="animation-delay:${i*0.8}s">
- <div class="capital-radius">
+ <div class="capital-radius" style="--radius:${radius}px">
   <img src="static/capital_ship.png" class="capital-ship">
  </div>
-</div>`;
+</div>
+`;
 }
 
 planetLayer.appendChild(planet);
@@ -493,3 +469,4 @@ buildRoutes();
 
 </body>
 </html>
+
