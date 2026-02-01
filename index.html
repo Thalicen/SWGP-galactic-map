@@ -57,6 +57,7 @@ z-index:1;
 /* WORLD */
 
 #map-world{
+overflow:visible;
 position:absolute;
 width:100%;
 height:100%;
@@ -80,17 +81,20 @@ display:flex;
 align-items:center;
 justify-content:center;
 cursor:pointer;
+user-select:none;
 }
 
 /* DOT */
 
 .dot{
-width:12px;
-height:12px;
-border-radius:50%;
-background:#4db8ff;
-box-shadow:0 0 8px #4db8ff;
+position:relative;
+z-index:30;
+display:block;
+min-width:12px;
+min-height:12px;
+opacity:1;
 }
+
 
 /* FACTIONS */
 
@@ -430,9 +434,8 @@ if(nearest) drawRoute(p,nearest);
 
 /* ================= SELECT ================= */
 
-function selectPlanet(el){
+function selectPlanet(p){
 
-const p=el.closest(".planet");
 
 document.querySelectorAll(".planet").forEach(pl=>pl.classList.remove("selected"));
 p.classList.add("selected");
@@ -528,7 +531,9 @@ buildRoutes();
 
 });
 
+
 </script>
 
 </body>
 </html>
+
