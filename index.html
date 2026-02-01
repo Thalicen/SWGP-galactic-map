@@ -124,9 +124,12 @@ padding:3px 6px;
 border-radius:5px;
 white-space:nowrap;
 pointer-events:none;
+z-index:50;
 }
 
 /* ================= SHIPS ================= */
+
+/* PATROL */
 
 .ship-orbit{
 position:absolute;
@@ -135,45 +138,25 @@ top:50%;
 width:0;
 height:0;
 transform-origin:center;
-animation: orbit 6s linear infinite;
+animation: orbitSpin 6s linear infinite;
 }
 
-/* distance from planet */
-
-.ship-offset{
+.ship-radius{
 transform: translateX(26px);
 }
-
-/* sprite */
 
 .ship-icon{
 width:18px;
 pointer-events:none;
 
-/* COUNTER ROTATION */
-animation: counterOrbit 6s linear infinite;
+animation: counterSpin 6s linear infinite;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.8))
 drop-shadow(0 0 12px rgba(0,170,255,.4));
 }
 
-/* ORBIT */
-
-@keyframes orbit{
-from{ transform:rotate(0deg); }
-to{ transform:rotate(360deg); }
-}
-
-/* COUNTER ROTATION */
-
-@keyframes counterOrbit{
-from{ transform:rotate(0deg); }
-to{ transform:rotate(-360deg); }
-}
-
-
-/* ================= CAPITAL SHIPS ================= */
+/* CAPITAL */
 
 .capital-orbit{
 position:absolute;
@@ -182,10 +165,10 @@ top:50%;
 width:0;
 height:0;
 transform-origin:center;
-animation: capitalOrbit 14s linear infinite;
+animation: capitalSpin 14s linear infinite;
 }
 
-.capital-offset{
+.capital-radius{
 transform: translateX(44px);
 }
 
@@ -200,7 +183,19 @@ drop-shadow(0 0 6px rgba(0,170,255,.6))
 drop-shadow(0 0 14px rgba(0,170,255,.4));
 }
 
-@keyframes capitalOrbit{
+/* ORBITS */
+
+@keyframes orbitSpin{
+from{ transform:rotate(0deg); }
+to{ transform:rotate(360deg); }
+}
+
+@keyframes counterSpin{
+from{ transform:rotate(0deg); }
+to{ transform:rotate(-360deg); }
+}
+
+@keyframes capitalSpin{
 from{ transform:rotate(0deg); }
 to{ transform:rotate(360deg); }
 }
@@ -286,7 +281,8 @@ z-index:20;
 /* ================= CAMERA ================= */
 
 let scale=1,posX=0,posY=0;
-let dragging=false,lastX=0,lastY=0,velX=0,velY=0,inertia=false;
+let dragging=false,lastX=0,lastY=0;
+let velX=0,velY=0,inertia=false;
 
 const world=document.getElementById("map-world");
 const viewport=document.getElementById("map-container");
@@ -394,23 +390,11 @@ drawRoute(pts[i],pts[j]);
 }
 }
 
-pts.forEach((p,i)=>{
-let best=999,near=null;
-pts.forEach((q,j)=>{
-if(i===j)return;
-const d=Math.hypot(p.x-q.x,p.y-q.y);
-if(d<best){best=d;near=q;}
-});
-if(near) drawRoute(p,near);
-});
 }
 
 /* ================= SELECT ================= */
 
 function selectPlanet(p){
-
-document.querySelectorAll(".planet").forEach(pl=>pl.classList.remove("selected"));
-p.classList.add("selected");
 
 const rect=viewport.getBoundingClientRect();
 
@@ -425,14 +409,12 @@ updateTransform();
 setTimeout(()=>world.style.transition="",500);
 
 const img=p.dataset.image?`<img src="static/${p.dataset.image}" class="info-image">`:"";
-const wiki=p.dataset.wiki!=="#"?`<a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>`:"";
 
 document.getElementById("info").innerHTML=`
 ${img}
 <h3>${p.dataset.name}</h3>
 <b>Faction:</b> ${p.dataset.faction}<br><br>
 <p>${p.dataset.desc}</p>
-${wiki}
 `;
 }
 
@@ -461,10 +443,9 @@ planet.className="planet "+(p.Faction||"neutral").toLowerCase();
 planet.style.left=p.X+"%";
 planet.style.top=p.Y+"%";
 
-planet.dataset.name=p.Planete||"Unknown Planet";
+planet.dataset.name=p.Planete||"Unknown";
 planet.dataset.faction=p.Faction||"Unknown";
-planet.dataset.desc=p.Description||"No description available.";
-planet.dataset.wiki=p.Wiki||"#";
+planet.dataset.desc=p.Description||"No description";
 planet.dataset.image=p.Image||"";
 
 planet.innerHTML=`
@@ -479,34 +460,26 @@ planet.onclick=()=>selectPlanet(planet);
 const patrolCount=p.PatrolCount||0;
 
 for(let i=0;i<patrolCount;i++){
-
-const angle=(360/patrolCount)*i;
-
-planet.innerHTML += `
-<div class="ship-orbit">
-  <div class="ship-offset">
-    <img src="static/patrol_ship.png" class="ship-icon">
-  </div>
-</div>
-`;
-
+planet.innerHTML+=`
+<div class="ship-orbit" style="animation-delay:${i*0.4}s">
+ <div class="ship-radius">
+  <img src="static/patrol_ship.png" class="ship-icon">
+ </div>
+</div>`;
+}
 
 /* CAPITAL SHIPS */
 
 const capitalCount=p.CapitalShip||0;
 
 for(let i=0;i<capitalCount;i++){
-
-const angle=(360/capitalCount)*i;
-
-planet.innerHTML += `
-<div class="capital-orbit">
-  <div class="capital-offset">
-    <img src="static/capital_ship.png" class="capital-ship">
-  </div>
-</div>
-`;
-
+planet.innerHTML+=`
+<div class="capital-orbit" style="animation-delay:${i*0.8}s">
+ <div class="capital-radius">
+  <img src="static/capital_ship.png" class="capital-ship">
+ </div>
+</div>`;
+}
 
 planetLayer.appendChild(planet);
 
@@ -520,4 +493,3 @@ buildRoutes();
 
 </body>
 </html>
-
