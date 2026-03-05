@@ -166,7 +166,28 @@ drop-shadow(0 0 12px rgba(0,170,255,.4));
 from{ transform: translate(-50%,-50%) rotate(90deg) rotate(0deg); }
 to{ transform: translate(-50%,-50%) rotate(90deg) rotate(-360deg); }
 }
-/* CAPITAL SHIPS */
+/* ================= CAPITAL SHIPS ================= */
+
+.capital-orbit{
+position:absolute;
+left:50%;
+top:50%;
+width:0;
+height:0;
+transform-origin:center;
+
+/* orbite autour de la planète */
+animation: capitalOrbit 14s linear infinite;
+}
+
+/* distance de l'orbite */
+
+.capital-offset{
+position:absolute;
+transform: translateX(44px);
+}
+
+/* vaisseau */
 
 .capital-ship{
 position:absolute;
@@ -174,22 +195,32 @@ left:50%;
 top:50%;
 width:36px;
 
-transform:
-translate(-50%,-50%)
-rotate(90deg);
+/* orientation fixe du vaisseau */
+transform: translate(-50%,-50%) rotate(90deg);
 
-animation: capitalFix 14s linear infinite;
+/* contre-rotation pour annuler la rotation de l'orbite */
+animation: capitalCounter 14s linear infinite;
+
+pointer-events:none;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.6))
 drop-shadow(0 0 14px rgba(0,170,255,.4));
 }
 
-@keyframes capitalFix{
+/* orbite */
+
+@keyframes capitalOrbit{
+from{ transform: rotate(0deg); }
+to{ transform: rotate(360deg); }
+}
+
+/* contre rotation */
+
+@keyframes capitalCounter{
 from{ transform: translate(-50%,-50%) rotate(90deg) rotate(0deg); }
 to{ transform: translate(-50%,-50%) rotate(90deg) rotate(-360deg); }
 }
-
 /* ORBITS */
 
 @keyframes orbitSpin{
@@ -475,5 +506,6 @@ buildRoutes();
 
 </body>
 </html>
+
 
 
