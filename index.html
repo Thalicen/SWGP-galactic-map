@@ -409,35 +409,42 @@ world.style.transition="transform .5s ease";
 updateTransform();
 setTimeout(()=>world.style.transition="",500);
 
-/* ---------- Patrol Names ---------- */
+/* IMAGE */
 
-let patrolText="None";
+const img = p.dataset.image
+? `<img src="static/${p.dataset.image}" class="info-image">`
+: "";
 
-if(p.dataset.patrolnames){
-patrolText=p.dataset.patrolnames;
-}
+/* WIKI */
 
-/* ---------- Image ---------- */
+const wiki = (p.dataset.wiki && p.dataset.wiki!=="#")
+? `<br><br><a href="${p.dataset.wiki}" target="_blank">Open Wiki</a>`
+: "";
 
-let imageHTML="";
+/* PATROL NAMES */
 
-if(p.dataset.image){
-imageHTML=`<img src="${p.dataset.image}">`;
-}
+const patrol = (p.dataset.patrolnames && p.dataset.patrolnames!=="")
+? `<br><br><b>Patrol:</b> ${p.dataset.patrolnames}`
+: "";
 
-info.innerHTML=`
+document.getElementById("info").innerHTML=`
+
+${img}
+
 <h3>${p.dataset.name}</h3>
 
-${imageHTML}
+<b>Faction:</b> ${p.dataset.faction}
 
-<b>Faction:</b> ${p.dataset.faction}<br><br>
+${patrol}
+
+<br><br>
 
 <p>${p.dataset.desc}</p>
 
-<br>
+${wiki}
 
-<b>Patrols:</b> ${patrolText}
 `;
+
 }
 
 /* ================= LOAD DATA ================= */
@@ -514,4 +521,5 @@ buildRoutes();
 
 </body>
 </html>
+
 
