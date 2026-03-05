@@ -89,8 +89,6 @@ height:26px;
 cursor:pointer;
 }
 
-/* DOT */
-
 .dot{
 position:absolute;
 left:50%;
@@ -102,14 +100,6 @@ border-radius:50%;
 background:#4db8ff;
 box-shadow:0 0 8px #4db8ff;
 }
-
-/* FACTIONS */
-
-.republic .dot{background:#4db8ff;box-shadow:0 0 8px #4db8ff;}
-.empire .dot{background:#ff2b2b;box-shadow:0 0 8px #ff2b2b;}
-.neutral .dot{background:#ccc;box-shadow:0 0 6px #ccc;}
-.pirates .dot{background:#9c27ff;box-shadow:0 0 6px #9c27ff;}
-.mandalore .dot{background:#ff9800;box-shadow:0 0 8px #ff9800;}
 
 /* LABEL */
 
@@ -134,7 +124,6 @@ left:50%;
 top:50%;
 width:0;
 height:0;
-transform-origin:center;
 animation: orbitSpin 6s linear infinite;
 }
 
@@ -143,27 +132,23 @@ position:absolute;
 transform: translateX(var(--radius));
 }
 
-/* correction orientation */
-
 .ship-icon{
 position:absolute;
 left:50%;
 top:50%;
 width:18px;
-
-transform:
-translate(-50%,-50%)
-rotate(90deg);
-
+transform:translate(-50%,-50%) rotate(90deg);
+animation: shipFix 6s linear infinite;
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.8))
 drop-shadow(0 0 12px rgba(0,170,255,.4));
 }
-{
 
+@keyframes shipFix{
 from{ transform: translate(-50%,-50%) rotate(90deg) rotate(0deg); }
 to{ transform: translate(-50%,-50%) rotate(90deg) rotate(-360deg); }
 }
+
 /* CAPITAL SHIPS */
 
 .capital-orbit{
@@ -172,7 +157,6 @@ left:50%;
 top:50%;
 width:0;
 height:0;
-transform-origin:center;
 animation: capitalSpin 14s linear infinite;
 }
 
@@ -185,22 +169,17 @@ position:absolute;
 left:50%;
 top:50%;
 width:36px;
-
-transform:
-translate(-50%,-50%)
-rotate(90deg);
-
-pointer-events:none;
-
+transform:translate(-50%,-50%) rotate(90deg);
+animation: capitalFix 14s linear infinite;
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.6))
 drop-shadow(0 0 14px rgba(0,170,255,.4));
 }
+
 @keyframes capitalFix{
 from{ transform: translate(-50%,-50%) rotate(90deg) rotate(0deg); }
 to{ transform: translate(-50%,-50%) rotate(90deg) rotate(-360deg); }
 }
-/* ORBITS */
 
 @keyframes orbitSpin{
 from{ transform:rotate(0deg); }
@@ -231,6 +210,14 @@ padding:12px;
 background:linear-gradient(135deg,#0a2850,#06162f);
 border-radius:12px;
 border:1px solid rgba(0,150,255,.4);
+}
+
+#info img{
+width:100%;
+max-height:150px;
+object-fit:cover;
+border-radius:8px;
+margin-bottom:10px;
 }
 
 /* ================= ROUTE BUTTON ================= */
@@ -269,8 +256,6 @@ z-index:20;
 
 <script>
 
-/* ================= CAMERA ================= */
-
 let scale=1,posX=0,posY=0;
 let dragging=false,lastX=0,lastY=0,velX=0,velY=0,inertia=false;
 
@@ -278,6 +263,7 @@ const world=document.getElementById("map-world");
 const viewport=document.getElementById("map-container");
 const routesSVG=document.getElementById("routes-layer");
 const planetLayer=document.getElementById("planet-layer");
+const info=document.getElementById("info");
 
 function updateTransform(){
 world.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
@@ -325,9 +311,8 @@ lastY=e.clientY;
 updateTransform();
 });
 
-/* INERTIA */
-
 function moveInertia(){
+
 if(!inertia)return;
 
 velX*=0.9;
@@ -381,7 +366,7 @@ drawRoute(pts[i],pts[j]);
 }
 }
 
-/* ================= SELECT ================= */
+/* ================= SELECT PLANET ================= */
 
 function selectPlanet(p){
 
@@ -397,22 +382,36 @@ world.style.transition="transform .5s ease";
 updateTransform();
 setTimeout(()=>world.style.transition="",500);
 
-document.getElementById("info").innerHTML=`
-<h3>${p.dataset.name}</h3>
-<b>Faction:</b> ${p.dataset.faction}<br><br>
-<p>${p.dataset.desc}</p>
-`;
+/* ---------- Patrol Names ---------- */
+
+let patrolText="None";
+
+if(p.dataset.patrolnames){
+patrolText=p.dataset.patrolnames;
 }
 
-/* ================= ROUTE TOGGLE ================= */
+/* ---------- Image ---------- */
 
-let routesVisible=true;
+let imageHTML="";
 
-document.getElementById("route-toggle").onclick=()=>{
-routesVisible=!routesVisible;
-routesSVG.style.display=routesVisible?"block":"none";
-document.getElementById("route-toggle").textContent=routesVisible?"Routes : ON":"Routes : OFF";
-};
+if(p.dataset.image){
+imageHTML=`<img src="${p.dataset.image}">`;
+}
+
+info.innerHTML=`
+<h3>${p.dataset.name}</h3>
+
+${imageHTML}
+
+<b>Faction:</b> ${p.dataset.faction}<br><br>
+
+<p>${p.dataset.desc}</p>
+
+<br>
+
+<b>Patrols:</b> ${patrolText}
+`;
+}
 
 /* ================= LOAD DATA ================= */
 
@@ -430,7 +429,10 @@ planet.style.top=p.Y+"%";
 
 planet.dataset.name=p.Planete||"Unknown";
 planet.dataset.faction=p.Faction||"Unknown";
-planet.dataset.desc=p.Description||"No description available.";
+planet.dataset.desc=p.Description||"No description";
+
+planet.dataset.image=p.Image||"";
+planet.dataset.patrolnames=p.PatrolNames||"None";
 
 planet.innerHTML=`
 <div class="dot"></div>
@@ -449,9 +451,9 @@ const radius=26+(i*6);
 
 planet.innerHTML+=`
 <div class="ship-orbit" style="animation-delay:${i*0.5}s">
- <div class="ship-radius" style="--radius:${radius}px">
-  <img src="static/patrol_ship.png" class="ship-icon">
- </div>
+<div class="ship-radius" style="--radius:${radius}px">
+<img src="static/patrol_ship.png" class="ship-icon">
+</div>
 </div>
 `;
 }
@@ -466,9 +468,9 @@ const radius=44+(i*10);
 
 planet.innerHTML+=`
 <div class="capital-orbit" style="animation-delay:${i*0.8}s">
- <div class="capital-radius" style="--radius:${radius}px">
-  <img src="static/capital_ship.png" class="capital-ship">
- </div>
+<div class="capital-radius" style="--radius:${radius}px">
+<img src="static/capital_ship.png" class="capital-ship">
+</div>
 </div>
 `;
 }
@@ -485,5 +487,3 @@ buildRoutes();
 
 </body>
 </html>
-
-
