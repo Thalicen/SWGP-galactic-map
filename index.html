@@ -1,110 +1,158 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Galactic RP Map</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Galaxy Map</title>
 
 <style>
 
+/* ================= PAGE ================= */
+
 body{
 margin:0;
-overflow:hidden;
-background:#020817;
 font-family:Arial;
 color:white;
+background-image:url("static/background.jpg");
+background-size:cover;
+background-attachment:fixed;
+background-color:#050814;
 }
 
-/* MAP */
+h2{text-align:center;margin:12px 0;}
 
-#mapContainer{
-position:absolute;
-width:100vw;
-height:100vh;
+/* ================= MAP ================= */
+
+#map-container{
+position:relative;
+width:100%;
+max-width:1200px;
+aspect-ratio:16/9;
+margin:10px auto;
+background:#081224;
+border-radius:12px;
+border:1px solid rgba(0,150,255,.4);
 overflow:hidden;
+cursor:grab;
 touch-action:none;
-}
-
-#map{
-position:absolute;
-transform-origin:0 0;
 }
 
 /* GRID */
 
-.grid{
+#map-container::before{
+content:"";
 position:absolute;
-width:6000px;
-height:6000px;
-
+inset:0;
 background-image:
-linear-gradient(rgba(80,120,255,0.15) 1px, transparent 1px),
-linear-gradient(90deg, rgba(80,120,255,0.15) 1px, transparent 1px);
-
-background-size:200px 200px;
+linear-gradient(to right, rgba(0,150,255,.07) 1px, transparent 1px),
+linear-gradient(to bottom, rgba(0,150,255,.07) 1px, transparent 1px);
+background-size:50px 50px;
+pointer-events:none;
+z-index:1;
 }
 
-/* ROUTES */
+/* WORLD */
 
-.route-line{
-stroke:rgba(0,170,255,0.35);
-stroke-width:1.2;
+#map-world{
+position:absolute;
+width:100%;
+height:100%;
+transform-origin:center center;
+z-index:2;
+will-change:transform;
 }
 
-/* PLANETS */
+/* ================= LAYERS ================= */
+
+#routes-layer{
+position:absolute;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:2;
+}
+
+#planet-layer{
+position:absolute;
+width:100%;
+height:100%;
+z-index:10;
+}
+
+/* ================= PLANETS ================= */
 
 .planet{
 position:absolute;
-width:10px;
-height:10px;
-
-border-radius:50%;
-background:#7cc6ff;
-
-box-shadow:
-0 0 10px rgba(0,170,255,0.8),
-0 0 20px rgba(0,170,255,0.5);
-
-cursor:pointer;
 transform:translate(-50%,-50%);
+width:26px;
+height:26px;
+cursor:pointer;
 }
 
-.planet:hover{
-transform:translate(-50%,-50%) scale(1.4);
+/* DOT */
+
+.dot{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:12px;
+height:12px;
+border-radius:50%;
+background:#4db8ff;
+box-shadow:0 0 8px #4db8ff;
 }
+
+/* FACTIONS */
+
+.republic .dot{background:#4db8ff;box-shadow:0 0 8px #4db8ff;}
+.empire .dot{background:#ff2b2b;box-shadow:0 0 8px #ff2b2b;}
+.neutral .dot{background:#ccc;box-shadow:0 0 6px #ccc;}
+.pirates .dot{background:#9c27ff;box-shadow:0 0 6px #9c27ff;}
+.mandalore .dot{background:#ff9800;box-shadow:0 0 8px #ff9800;}
 
 /* LABEL */
 
 .label{
 position:absolute;
-transform:translate(-50%,8px);
-
-background:rgba(0,0,0,0.7);
-padding:3px 8px;
-
-border-radius:6px;
-font-size:12px;
+top:100%;
+left:50%;
+transform:translateX(-50%) translateY(6px);
+font-size:11px;
+background:rgba(0,0,0,.7);
+padding:3px 6px;
+border-radius:5px;
 white-space:nowrap;
+pointer-events:none;
 }
 
-/* INFO PANEL */
+/* ================= SHIPS ================= */
 
-#info{
-position:fixed;
-right:15px;
-bottom:15px;
-
-background:rgba(0,0,0,0.8);
-padding:14px;
-
-border-radius:10px;
-
-width:220px;
+.ship-orbit{
+position:absolute;
+left:50%;
+top:50%;
+width:0;
+height:0;
+transform-origin:center;
+animation: orbitSpin 6s linear infinite;
 }
 
-#info h3{
-margin-top:0;
+.ship-radius{
+transform: translateX(var(--radius));
+}
+
+.ship-icon{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%) rotate(90deg);
+width:18px;
+pointer-events:none;
+
+filter:
+drop-shadow(0 0 6px rgba(0,170,255,.8))
+drop-shadow(0 0 12px rgba(0,170,255,.4));
 }
 
 /* CAPITAL SHIPS */
@@ -113,42 +161,74 @@ margin-top:0;
 position:absolute;
 left:50%;
 top:50%;
-
 width:0;
 height:0;
-
 transform-origin:center;
-animation:orbit 20s linear infinite;
+animation: capitalSpin 14s linear infinite;
 }
 
-.capital-offset{
-position:absolute;
-transform:translateX(42px);
+.capital-radius{
+transform: translateX(var(--radius));
 }
 
 .capital-ship{
-width:34px;
-
+position:absolute;
+left:50%;
+top:50%;
 transform:translate(-50%,-50%) rotate(90deg);
-animation:counterOrbit 20s linear infinite;
-
+width:36px;
 pointer-events:none;
 
 filter:
-drop-shadow(0 0 6px rgba(0,170,255,.7))
-drop-shadow(0 0 16px rgba(0,170,255,.4));
+drop-shadow(0 0 6px rgba(0,170,255,.6))
+drop-shadow(0 0 14px rgba(0,170,255,.4));
 }
 
-/* animations */
+/* ORBITS */
 
-@keyframes orbit{
-from{transform:rotate(0deg);}
-to{transform:rotate(360deg);}
+@keyframes orbitSpin{
+from{ transform:rotate(0deg); }
+to{ transform:rotate(360deg); }
 }
 
-@keyframes counterOrbit{
-from{transform:translate(-50%,-50%) rotate(90deg) rotate(0deg);}
-to{transform:translate(-50%,-50%) rotate(90deg) rotate(-360deg);}
+@keyframes capitalSpin{
+from{ transform:rotate(0deg); }
+to{ transform:rotate(360deg); }
+}
+
+/* ================= ROUTES ================= */
+
+.route-line{
+stroke:rgba(0,170,255,.55);
+stroke-width:.35;
+vector-effect:non-scaling-stroke;
+filter:drop-shadow(0 0 3px rgba(0,170,255,.6));
+}
+
+/* ================= INFO ================= */
+
+#info{
+width:900px;
+max-width:95vw;
+margin:12px auto;
+padding:12px;
+background:linear-gradient(135deg,#0a2850,#06162f);
+border-radius:12px;
+border:1px solid rgba(0,150,255,.4);
+}
+
+/* ================= ROUTE BUTTON ================= */
+
+#route-toggle{
+position:absolute;
+top:10px;
+right:10px;
+padding:6px 12px;
+background:#0a2a55;
+border-radius:8px;
+cursor:pointer;
+border:1px solid rgba(0,150,255,.6);
+z-index:20;
 }
 
 </style>
@@ -156,219 +236,234 @@ to{transform:translate(-50%,-50%) rotate(90deg) rotate(-360deg);}
 
 <body>
 
-<div id="mapContainer">
+<h2>Galactic RP Map</h2>
 
-<div id="map">
+<div id="map-container">
 
-<div class="grid"></div>
+<div id="route-toggle">Routes : ON</div>
 
-<svg id="routes" width="6000" height="6000"></svg>
-
-<div id="planets"></div>
-
-</div>
+<div id="map-world">
+<svg id="routes-layer" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+<div id="planet-layer"></div>
 </div>
 
-<div id="info">
-<h3 id="planetName">Planet</h3>
-<div id="patrolNames">Patrol: none</div>
 </div>
+
+<div id="info">Click on a planet</div>
 
 <script>
 
-/* PLANETS DATA */
+/* ================= CAMERA ================= */
 
-const planets = [
+let scale=1,posX=0,posY=0;
+let dragging=false,lastX=0,lastY=0,velX=0,velY=0,inertia=false;
 
-{name:"Ilum",x:700,y:900,patrol:["Alpha","Beta"]},
-{name:"Exegol",x:500,y:850,patrol:["Gamma"]},
+const world=document.getElementById("map-world");
+const viewport=document.getElementById("map-container");
+const routesSVG=document.getElementById("routes-layer");
+const planetLayer=document.getElementById("planet-layer");
 
-{name:"Bogano",x:2400,y:600,patrol:["Delta"]},
-{name:"Dantooine",x:2400,y:700,patrol:["Echo"]},
+function updateTransform(){
+world.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
+}
 
-{name:"Coruscant",x:2300,y:1300,patrol:["Sentinel"]},
-{name:"Tython",x:2100,y:1350,patrol:["Sentinel"]},
+/* ZOOM */
 
-{name:"Kuat",x:2600,y:1400,patrol:["Fleet"]},
+viewport.addEventListener("wheel",e=>{
+e.preventDefault();
+scale+=e.deltaY<0?0.1:-0.1;
+scale=Math.max(.6,Math.min(2.5,scale));
+updateTransform();
+},{passive:false});
 
-{name:"Zios",x:3200,y:700,patrol:["Guard"]},
-{name:"Korriban",x:3100,y:800,patrol:["Guard"]},
-{name:"Felucia",x:3300,y:900,patrol:["Guard"]},
+/* DRAG */
 
-{name:"Trandosha",x:3500,y:1900,patrol:["Watch"]},
-
-{name:"Kamino",x:3800,y:2200,patrol:["Defense"]},
-{name:"Geonosis",x:3600,y:2250,patrol:["Defense"]},
-{name:"Tatooine",x:3500,y:2350,patrol:["Defense"]},
-
-{name:"Tanallorr",x:900,y:2700,patrol:["Hidden"]},
-{name:"Hoth",x:1300,y:2500,patrol:["Echo"]},
-{name:"Takodana",x:1100,y:2300,patrol:["Echo"]}
-
-];
-
-
-/* ROUTES */
-
-const routes = [
-
-["Ilum","Exegol"],
-
-["Bogano","Dantooine"],
-
-["Coruscant","Kuat"],
-["Coruscant","Tython"],
-
-["Zios","Korriban"],
-["Zios","Felucia"],
-
-["Geonosis","Kamino"],
-["Geonosis","Tatooine"],
-
-["Tanallorr","Hoth"],
-["Hoth","Takodana"]
-
-];
-
-
-/* MAP */
-
-const planetContainer = document.getElementById("planets");
-const routeSVG = document.getElementById("routes");
-
-/* create planets */
-
-const planetIndex={};
-
-planets.forEach(p=>{
-
-const el=document.createElement("div");
-el.className="planet";
-
-el.style.left=p.x+"px";
-el.style.top=p.y+"px";
-
-planetContainer.appendChild(el);
-
-const label=document.createElement("div");
-label.className="label";
-label.innerText=p.name;
-
-label.style.left=p.x+"px";
-label.style.top=p.y+"px";
-
-planetContainer.appendChild(label);
-
-planetIndex[p.name]=p;
-
-/* info click */
-
-el.onclick=()=>{
-
-document.getElementById("planetName").innerText=p.name;
-document.getElementById("patrolNames").innerText="Patrol: "+p.patrol.join(", ");
-
-};
-
-/* ships */
-
-createShips(el,3);
-
+viewport.addEventListener("mousedown",e=>{
+dragging=true;
+lastX=e.clientX;
+lastY=e.clientY;
+velX=velY=0;
 });
 
+window.addEventListener("mouseup",()=>{
+dragging=false;
+inertia=true;
+requestAnimationFrame(moveInertia);
+});
 
-/* ROUTES DRAW */
+window.addEventListener("mousemove",e=>{
+if(!dragging)return;
 
-routes.forEach(r=>{
+const dx=e.clientX-lastX;
+const dy=e.clientY-lastY;
 
-const a=planetIndex[r[0]];
-const b=planetIndex[r[1]];
+posX+=dx;
+posY+=dy;
 
+velX=dx;
+velY=dy;
+
+lastX=e.clientX;
+lastY=e.clientY;
+
+updateTransform();
+});
+
+/* INERTIA */
+
+function moveInertia(){
+if(!inertia)return;
+
+velX*=0.9;
+velY*=0.9;
+
+if(Math.abs(velX)<0.1 && Math.abs(velY)<0.1){
+inertia=false;
+return;
+}
+
+posX+=velX;
+posY+=velY;
+
+updateTransform();
+requestAnimationFrame(moveInertia);
+}
+
+/* ================= ROUTES ================= */
+
+function drawRoute(a,b){
 const line=document.createElementNS("http://www.w3.org/2000/svg","line");
-
 line.setAttribute("x1",a.x);
 line.setAttribute("y1",a.y);
 line.setAttribute("x2",b.x);
 line.setAttribute("y2",b.y);
+line.classList.add("route-line");
+routesSVG.appendChild(line);
+}
 
-line.setAttribute("class","route-line");
+function buildRoutes(){
 
-routeSVG.appendChild(line);
+routesSVG.innerHTML="";
+const planets=document.querySelectorAll(".planet");
+const pts=[];
+
+planets.forEach(p=>{
+pts.push({
+x:parseFloat(p.style.left),
+y:parseFloat(p.style.top)
+});
+});
+
+const maxDist=28;
+
+for(let i=0;i<pts.length;i++){
+for(let j=i+1;j<pts.length;j++){
+if(Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y)<maxDist){
+drawRoute(pts[i],pts[j]);
+}
+}
+}
+}
+
+/* ================= SELECT ================= */
+
+function selectPlanet(p){
+
+const rect=viewport.getBoundingClientRect();
+
+const px=parseFloat(p.style.left)/100*rect.width;
+const py=parseFloat(p.style.top)/100*rect.height;
+
+posX=(rect.width/2/scale)-px;
+posY=(rect.height/2/scale)-py;
+
+world.style.transition="transform .5s ease";
+updateTransform();
+setTimeout(()=>world.style.transition="",500);
+
+document.getElementById("info").innerHTML=`
+<h3>${p.dataset.name}</h3>
+<b>Faction:</b> ${p.dataset.faction}<br><br>
+<p>${p.dataset.desc}</p>
+`;
+}
+
+/* ================= ROUTE TOGGLE ================= */
+
+let routesVisible=true;
+
+document.getElementById("route-toggle").onclick=()=>{
+routesVisible=!routesVisible;
+routesSVG.style.display=routesVisible?"block":"none";
+document.getElementById("route-toggle").textContent=routesVisible?"Routes : ON":"Routes : OFF";
+};
+
+/* ================= LOAD DATA ================= */
+
+fetch("./data.json")
+.then(r=>r.json())
+.then(planetes=>{
+
+planetes.forEach(p=>{
+
+const planet=document.createElement("div");
+
+planet.className="planet "+(p.Faction||"neutral").toLowerCase();
+planet.style.left=p.X+"%";
+planet.style.top=p.Y+"%";
+
+planet.dataset.name=p.Planete||"Unknown";
+planet.dataset.faction=p.Faction||"Unknown";
+planet.dataset.desc=p.Description||"No description available.";
+
+planet.innerHTML=`
+<div class="dot"></div>
+<div class="label">${p.Planete||"Unknown"}</div>
+`;
+
+planet.onclick=()=>selectPlanet(planet);
+
+/* PATROL SHIPS */
+
+const patrolCount=p.PatrolCount||0;
+
+for(let i=0;i<patrolCount;i++){
+
+const radius=26+(i*6);
+
+planet.innerHTML+=`
+<div class="ship-orbit" style="animation-delay:${i*0.5}s">
+ <div class="ship-radius" style="--radius:${radius}px">
+  <img src="static/patrol_ship.png" class="ship-icon">
+ </div>
+</div>
+`;
+}
+
+/* CAPITAL SHIPS */
+
+const capitalCount=p.CapitalShip||0;
+
+for(let i=0;i<capitalCount;i++){
+
+const radius=44+(i*10);
+
+planet.innerHTML+=`
+<div class="capital-orbit" style="animation-delay:${i*0.8}s">
+ <div class="capital-radius" style="--radius:${radius}px">
+  <img src="static/capital_ship.png" class="capital-ship">
+ </div>
+</div>
+`;
+}
+
+planetLayer.appendChild(planet);
 
 });
 
+buildRoutes();
 
-/* SHIPS */
-
-function createShips(planet,count){
-
-for(let i=0;i<count;i++){
-
-const orbit=document.createElement("div");
-orbit.className="capital-orbit";
-
-orbit.style.animationDelay=(-i*3)+"s";
-
-const offset=document.createElement("div");
-offset.className="capital-offset";
-
-const ship=document.createElement("img");
-ship.src="https://i.imgur.com/7Q9Z1Zm.png";
-ship.className="capital-ship";
-
-offset.appendChild(ship);
-orbit.appendChild(offset);
-planet.appendChild(orbit);
-
-}
-
-}
-
-
-/* ZOOM + PAN */
-
-const map=document.getElementById("map");
-
-let scale=1;
-let posX=0;
-let posY=0;
-
-mapContainer.onwheel=(e)=>{
-
-e.preventDefault();
-
-const zoom=e.deltaY<0?1.1:0.9;
-
-scale*=zoom;
-
-map.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
-
-};
-
-let dragging=false;
-let lastX,lastY;
-
-mapContainer.onmousedown=e=>{
-dragging=true;
-lastX=e.clientX;
-lastY=e.clientY;
-};
-
-mapContainer.onmouseup=()=>dragging=false;
-
-mapContainer.onmousemove=e=>{
-
-if(!dragging)return;
-
-posX+=e.clientX-lastX;
-posY+=e.clientY-lastY;
-
-lastX=e.clientX;
-lastY=e.clientY;
-
-map.style.transform=`translate(${posX}px,${posY}px) scale(${scale})`;
-
-};
+});
 
 </script>
 
