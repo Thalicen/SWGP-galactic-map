@@ -7,11 +7,11 @@
     "": "",
     "Description": "Kyber crystal mine",
     "Wiki": "https://starwars.fandom.com/wiki/Ilum",
-    "PatrolNames": "jean",
+    "PatrolNames": "",
     "X": "24.5",
     "Y": "28.5",
     "PatrolCount": "0",
-    "CapitalShip": "3",
+    "CapitalShip": "",
     "Image": "Ilum.png"
   },
   {
@@ -40,7 +40,7 @@
     "PatrolNames": "",
     "X": "49.5",
     "Y": "41",
-    "PatrolCount": "O",
+    "PatrolCount": "0",
     "CapitalShip": "0",
     "Image": "Tython.png"
   },
@@ -101,7 +101,7 @@
     "X": "32.5",
     "Y": "93",
     "PatrolCount": "0",
-    "CapitalShip": "3",
+    "CapitalShip": "0",
     "Image": "Tanalorr.png"
   },
   {
@@ -130,7 +130,7 @@
     "PatrolNames": "",
     "X": "93",
     "Y": "71.5",
-    "PatrolCount": "2",
+    "PatrolCount": "0",
     "CapitalShip": "0",
     "Image": "Kamino.png"
   },
