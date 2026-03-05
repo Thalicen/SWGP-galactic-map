@@ -155,14 +155,12 @@ transform:
 translate(-50%,-50%)
 rotate(90deg);
 
-animation: shipFix 6s linear infinite;
-
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.8))
 drop-shadow(0 0 12px rgba(0,170,255,.4));
 }
+{
 
-@keyframes shipFix{
 from{ transform: translate(-50%,-50%) rotate(90deg) rotate(0deg); }
 to{ transform: translate(-50%,-50%) rotate(90deg) rotate(-360deg); }
 }
@@ -186,34 +184,18 @@ transform: translateX(var(--radius));
 position:absolute;
 left:50%;
 top:50%;
-transform:translate(-50%,-50%) rotate(90deg);
-width:36px;
-pointer-events:none;
-
-filter:
-drop-shadow(0 0 6px rgba(0,170,255,.6))
-drop-shadow(0 0 14px rgba(0,170,255,.4));
-}
-
-
-
-.capital-ship{
-position:absolute;
-left:50%;
-top:50%;
 width:36px;
 
 transform:
 translate(-50%,-50%)
 rotate(90deg);
 
-animation: capitalFix 14s linear infinite;
+pointer-events:none;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.6))
 drop-shadow(0 0 14px rgba(0,170,255,.4));
 }
-
 @keyframes capitalFix{
 from{ transform: translate(-50%,-50%) rotate(90deg) rotate(0deg); }
 to{ transform: translate(-50%,-50%) rotate(90deg) rotate(-360deg); }
@@ -503,4 +485,5 @@ buildRoutes();
 
 </body>
 </html>
+
 
