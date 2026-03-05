@@ -139,22 +139,33 @@ animation: orbitSpin 6s linear infinite;
 }
 
 .ship-radius{
+position:absolute;
 transform: translateX(var(--radius));
 }
+
+/* correction orientation */
 
 .ship-icon{
 position:absolute;
 left:50%;
 top:50%;
-transform:translate(-50%,-50%) rotate(90deg);
 width:18px;
-pointer-events:none;
+
+transform:
+translate(-50%,-50%)
+rotate(90deg);
+
+animation: shipFix 6s linear infinite;
 
 filter:
 drop-shadow(0 0 6px rgba(0,170,255,.8))
 drop-shadow(0 0 12px rgba(0,170,255,.4));
 }
 
+@keyframes shipFix{
+from{ transform: translate(-50%,-50%) rotate(90deg) rotate(0deg); }
+to{ transform: translate(-50%,-50%) rotate(90deg) rotate(-360deg); }
+}
 /* CAPITAL SHIPS */
 
 .capital-orbit{
@@ -184,6 +195,29 @@ drop-shadow(0 0 6px rgba(0,170,255,.6))
 drop-shadow(0 0 14px rgba(0,170,255,.4));
 }
 
+
+
+.capital-ship{
+position:absolute;
+left:50%;
+top:50%;
+width:36px;
+
+transform:
+translate(-50%,-50%)
+rotate(90deg);
+
+animation: capitalFix 14s linear infinite;
+
+filter:
+drop-shadow(0 0 6px rgba(0,170,255,.6))
+drop-shadow(0 0 14px rgba(0,170,255,.4));
+}
+
+@keyframes capitalFix{
+from{ transform: translate(-50%,-50%) rotate(90deg) rotate(0deg); }
+to{ transform: translate(-50%,-50%) rotate(90deg) rotate(-360deg); }
+}
 /* ORBITS */
 
 @keyframes orbitSpin{
@@ -469,3 +503,4 @@ buildRoutes();
 
 </body>
 </html>
+
