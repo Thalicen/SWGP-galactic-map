@@ -400,13 +400,13 @@
 "PatrolCount":0,
 "CapitalShip":0,
 "Image":"jakku.jpg"
-}
+},
 
 {
 "Planete":"Dagobah",
 "Faction":"Neutral",
-"Description":"Shipwreck cemetery",
-"Wiki":"https://starwars.fandom.com/fr/wiki/Jakku",
+"Description":"Swampy world",
+"Wiki":"https://starwars.fandom.com/fr/wiki/Dagobah",
 "PatrolNames":"",
 "X":74,
 "Y":87,
