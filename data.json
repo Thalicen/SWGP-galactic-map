@@ -13,7 +13,7 @@
 },
 
 {
-"Planete":"Coruscant",
+"Planet":"Coruscant",
 "Faction":"Republic",
 "Description":"Galactic capital",
 "Wiki":"https://starwars.fandom.com/wiki/Coruscant",
@@ -26,7 +26,7 @@
 },
 
 {
-"Planete":"Tython",
+"Planet":"Tython",
 "Faction":"Republic",
 "Description":"Original Jedi world",
 "Wiki":"https://starwars.fandom.com/wiki/Tython",
@@ -39,7 +39,7 @@
 },
 
 {
-"Planete":"Alderaan",
+"Planet":"Alderaan",
 "Faction":"Republic",
 "Description":"Noble world",
 "Wiki":"https://starwars.fandom.com/wiki/Alderaan",
@@ -52,7 +52,7 @@
 },
 
 {
-"Planete":"Ahch-To",
+"Planet":"Ahch-To",
 "Faction":"Republic",
 "Description":"Ancient Jedi world",
 "Wiki":"https://starwars.fandom.com/wiki/Ahch-To",
@@ -65,7 +65,7 @@
 },
 
 {
-"Planete":"Takodana",
+"Planet":"Takodana",
 "Faction":"Republic",
 "Description":"Strategic outpost",
 "Wiki":"https://starwars.fandom.com/wiki/Takodana",
@@ -78,7 +78,7 @@
 },
 
 {
-"Planete":"Tanalorr",
+"Planet":"Tanalorr",
 "Faction":"Republic",
 "Description":"Hidden world",
 "Wiki":"https://starwars.fandom.com/wiki/Tanalorr",
@@ -91,7 +91,7 @@
 },
 
 {
-"Planete":"Naboo",
+"Planet":"Naboo",
 "Faction":"Republic",
 "Description":"Political world",
 "Wiki":"https://starwars.fandom.com/wiki/Naboo",
@@ -104,7 +104,7 @@
 },
 
 {
-"Planete":"Kamino",
+"Planet":"Kamino",
 "Faction":"Republic",
 "Description":"Cloning world",
 "Wiki":"https://starwars.fandom.com/wiki/Kamino",
@@ -117,7 +117,7 @@
 },
 
 {
-"Planete":"Geonosis",
+"Planet":"Geonosis",
 "Faction":"Republic",
 "Description":"Droid factories",
 "Wiki":"https://starwars.fandom.com/wiki/Geonosis",
@@ -130,7 +130,7 @@
 },
 
 {
-"Planete":"Exegol",
+"Planet":"Exegol",
 "Faction":"Empire",
 "Description":"Sith world",
 "Wiki":"https://starwars.fandom.com/wiki/Exegol",
@@ -143,7 +143,7 @@
 },
 
 {
-"Planete":"Ziost",
+"Planet":"Ziost",
 "Faction":"Empire",
 "Description":"Sith capital",
 "Wiki":"https://starwars.fandom.com/wiki/Ziost",
@@ -156,7 +156,7 @@
 },
 
 {
-"Planete":"Dromund Kass",
+"Planet":"Dromund Kass",
 "Faction":"Empire",
 "Description":"Sith world",
 "Wiki":"https://starwars.fandom.com/wiki/Dromund_Kaas",
@@ -169,7 +169,7 @@
 },
 
 {
-"Planete":"Korriban",
+"Planet":"Korriban",
 "Faction":"Empire",
 "Description":"Sith graves",
 "Wiki":"https://starwars.fandom.com/wiki/Korriban",
@@ -182,7 +182,7 @@
 },
 
 {
-"Planete":"Hoth",
+"Planet":"Hoth",
 "Faction":"Empire",
 "Description":"Insulated base",
 "Wiki":"https://starwars.fandom.com/wiki/Hoth",
@@ -195,7 +195,7 @@
 },
 
 {
-"Planete":"Mustafar",
+"Planet":"Mustafar",
 "Faction":"Empire",
 "Description":"Volcanic world",
 "Wiki":"https://starwars.fandom.com/wiki/Mustafar",
@@ -208,7 +208,7 @@
 },
 
 {
-"Planete":"Florrum",
+"Planet":"Florrum",
 "Faction":"Pirates",
 "Description":"Pirate base",
 "Wiki":"https://starwars.fandom.com/wiki/Florrum",
@@ -221,7 +221,7 @@
 },
 
 {
-"Planete":"Felucia",
+"Planet":"Felucia",
 "Faction":"Pirates",
 "Description":"Toxic jungle",
 "Wiki":"https://starwars.fandom.com/wiki/Felucia",
@@ -234,7 +234,7 @@
 },
 
 {
-"Planete":"Kijimi",
+"Planet":"Kijimi",
 "Faction":"Pirates",
 "Description":"Black market",
 "Wiki":"https://starwars.fandom.com/wiki/Kijimi",
@@ -247,7 +247,7 @@
 },
 
 {
-"Planete":"Tatooine",
+"Planet":"Tatooine",
 "Faction":"Pirates",
 "Description":"Desert planet",
 "Wiki":"https://starwars.fandom.com/wiki/Tatooine",
@@ -260,7 +260,7 @@
 },
 
 {
-"Planete":"Bogano",
+"Planet":"Bogano",
 "Faction":"Mandalore",
 "Description":"Ancient Jedi world",
 "Wiki":"https://starwars.fandom.com/wiki/Bogano",
@@ -273,7 +273,7 @@
 },
 
 {
-"Planete":"Mandalore",
+"Planet":"Mandalore",
 "Faction":"Mandalore",
 "Description":"Warrior world",
 "Wiki":"https://starwars.fandom.com/wiki/Mandalore",
@@ -286,7 +286,7 @@
 },
 
 {
-"Planete":"Kalevala",
+"Planet":"Kalevala",
 "Faction":"Mandalore",
 "Description":"Mandalorian system",
 "Wiki":"https://starwars.fandom.com/wiki/Kalevala",
@@ -299,7 +299,7 @@
 },
 
 {
-"Planete":"D-Qar",
+"Planet":"D-Qar",
 "Faction":"Mandalore",
 "Description":"Rebel base",
 "Wiki":"https://starwars.fandom.com/wiki/D%27Qar",
@@ -312,7 +312,7 @@
 },
 
 {
-"Planete":"Ryloth",
+"Planet":"Ryloth",
 "Faction":"Mandalore",
 "Description":"Twil'ek world",
 "Wiki":"https://starwars.fandom.com/wiki/Ryloth",
@@ -325,7 +325,7 @@
 },
 
 {
-"Planete":"Dantooine",
+"Planet":"Dantooine",
 "Faction":"Neutral",
 "Description":"Jedi enclave",
 "Wiki":"https://starwars.fandom.com/wiki/Dantooine",
@@ -338,7 +338,7 @@
 },
 
 {
-"Planete":"Akiva",
+"Planet":"Akiva",
 "Faction":"Neutral",
 "Description":"Industrial world",
 "Wiki":"https://starwars.fandom.com/wiki/Akiva",
@@ -351,7 +351,7 @@
 },
 
 {
-"Planete":"Kuat",
+"Planet":"Kuat",
 "Faction":"Neutral",
 "Description":"Shipyard",
 "Wiki":"https://starwars.fandom.com/wiki/Kuat",
@@ -364,7 +364,7 @@
 },
 
 {
-"Planete":"Trandosha",
+"Planet":"Trandosha",
 "Faction":"Neutral",
 "Description":"Hunter world",
 "Wiki":"https://starwars.fandom.com/fr/wiki/Trandosha",
@@ -377,7 +377,7 @@
 },
 
 {
-"Planete":"Cantonica",
+"Planet":"Cantonica",
 "Faction":"Neutral",
 "Description":"Galactic casino",
 "Wiki":"https://starwars.fandom.com/wiki/Cantonica",
@@ -390,7 +390,7 @@
 },
 
 {
-"Planete":"Jakku",
+"Planet":"Jakku",
 "Faction":"Neutral",
 "Description":"Shipwreck cemetery",
 "Wiki":"https://starwars.fandom.com/fr/wiki/Jakku",
@@ -403,7 +403,7 @@
 },
 
 {
-"Planete":"Dagobah",
+"Planet":"Dagobah",
 "Faction":"Neutral",
 "Description":"Swampy world",
 "Wiki":"https://starwars.fandom.com/fr/wiki/Dagobah",
