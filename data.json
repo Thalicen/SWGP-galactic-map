@@ -450,7 +450,7 @@
     "Image": "Cantonica.png"
   },
   {
-    "Planete": "",
+    "Planete": "Daghoba",
     "ygy": "",
     "gjdvj": "",
     "Faction": "",
@@ -465,16 +465,16 @@
     "Image": "Daghoba.jpg"
   },
   {
-    "Planete": "",
+    "Planete": "Jakku",
     "ygy": "",
     "gjdvj": "",
-    "Faction": "",
+    "Faction": "Neutral",
     "": "",
     "Description": "",
-    "Wiki": "",
+    "Wiki": "https://starwars.fandom.com/fr/wiki/Jakku",
     "PatrolNames": "",
-    "X": "",
-    "Y": "",
+    "X": "42",
+    "Y": "38",
     "PatrolCount": "",
     "CapitalShip": "0",
     "Image": "jakku.jpg"
